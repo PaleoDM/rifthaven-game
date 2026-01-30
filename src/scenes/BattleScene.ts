@@ -1928,6 +1928,8 @@ export class BattleScene extends Phaser.Scene {
         this.addCombatLogMessage(`${unit.name} is no longer held.`);
       }
 
+      // Update condition markers to show new duration
+      updateConditionMarkers(unit, this);
       this.updateTurnOrderUI();
       return { canAct: false, skipReason: 'held' };
     }
@@ -1958,6 +1960,9 @@ export class BattleScene extends Phaser.Scene {
         unit.statusEffects = unit.statusEffects.filter(e => e.type !== 'poison');
         this.addCombatLogMessage(`${unit.name} has recovered from poison.`);
       }
+
+      // Update condition markers to show new poison duration
+      updateConditionMarkers(unit, this);
     }
 
     // Process zone damage (Entangle) at turn start
@@ -1970,18 +1975,25 @@ export class BattleScene extends Phaser.Scene {
       }
     }
 
-    // Process other status effect durations (barkskin, exposed, hidden, immobilized)
+    // Process other status effect durations (barkskin, exposed, hidden, immobilized, rage, dodge, inspired)
     // These tick down at start of unit's turn
-    const tickingEffects = ['barkskin', 'exposed', 'hidden', 'immobilized'];
+    const tickingEffects = ['barkskin', 'exposed', 'hidden', 'immobilized', 'rage', 'dodge', 'inspired'];
+    let effectChanged = false;
     for (const effectType of tickingEffects) {
       const effect = unit.statusEffects.find(e => e.type === effectType);
       if (effect && effect.duration > 0) {
         effect.duration--;
+        effectChanged = true;
         if (effect.duration <= 0) {
           unit.statusEffects = unit.statusEffects.filter(e => e.type !== effectType);
           this.addCombatLogMessage(`${unit.name}'s ${effectType} effect has worn off.`);
         }
       }
+    }
+
+    // Update condition markers if any effects changed (duration decrement or expiration)
+    if (effectChanged) {
+      updateConditionMarkers(unit, this);
     }
 
     this.updateTurnOrderUI();
