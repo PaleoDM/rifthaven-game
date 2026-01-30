@@ -454,20 +454,25 @@ export class SparkworksScene extends Phaser.Scene {
   private checkProximityBattleTriggers(): void {
     for (const location of this.locations) {
       if (location.type === 'proximity_battle' && location.proximityDistance) {
-        const distance = this.getDistanceToLocation(location);
-        if (distance <= location.proximityDistance) {
-          // Check if the battle has already been completed
-          const battleCompleteFlag = `${location.battleMap}_battle_complete`;
-          if (this.gameFlags[battleCompleteFlag] && location.postBattleExploreMap) {
-            // Battle is done - load exploration instead
+        const battleCompleteFlag = `${location.battleMap}_battle_complete`;
+        const isBattleComplete = this.gameFlags[battleCompleteFlag];
+
+        if (isBattleComplete && location.postBattleExploreMap) {
+          // Battle is done - only trigger exploration when on the exact marker position
+          if (this.playerGridX === location.markerPosition.x &&
+              this.playerGridY === location.markerPosition.y) {
             this.enterPostBattleExplore(location);
-          } else if (!this.gameFlags[battleCompleteFlag]) {
-            // Battle not complete - trigger it
-            this.triggerProximityBattle(location);
+            return;
           }
-          // If battle is complete but no postBattleExploreMap, do nothing
-          return;
+        } else if (!isBattleComplete) {
+          // Battle not complete - trigger from proximity distance (for ambush)
+          const distance = this.getDistanceToLocation(location);
+          if (distance <= location.proximityDistance) {
+            this.triggerProximityBattle(location);
+            return;
+          }
         }
+        // If battle is complete but no postBattleExploreMap, do nothing
       }
     }
   }

@@ -32,8 +32,8 @@ export class NarratorScene extends Phaser.Scene {
     { name: 'SparkworksScene', scene: 'SparkworksScene', description: 'Overland map' },
     { name: 'SparkworksUnderground', scene: 'SparkworksUndergroundScene', description: 'Underground tunnels' },
     { name: 'Battle: Distillery', scene: 'BattleScene:abandoned_distillery', description: 'Lv1 - Opening battle' },
-    { name: 'Battle: Street', scene: 'BattleScene:street', description: 'Lv1 - Ledgermen ambush' },
-    { name: 'Battle: Chapel', scene: 'BattleScene:allfather_chapel', description: 'Lv2 - Cultist stronghold' },
+    { name: 'Battle: Street Ambush', scene: 'BattleScene:sparkworks_street', description: 'Lv1 - Ledgermen ambush' },
+    { name: 'Explore: Ashen Chapel', scene: 'BattleScene:ashen_chapel', description: 'Lv2 - Chapel exploration' },
     { name: 'MenuScene', scene: 'MenuScene', description: 'Party stats overlay' },
   ];
   private devSceneTexts: Phaser.GameObjects.Text[] = [];
@@ -294,8 +294,8 @@ export class NarratorScene extends Phaser.Scene {
     const getLevelForBattle = (battleId: string): number => {
       switch (battleId) {
         case 'abandoned_distillery': return 1;
-        case 'street': return 1;
-        case 'allfather_chapel': return 2;
+        case 'sparkworks_street': return 1;
+        case 'ashen_chapel': return 2;
         default: return 1;
       }
     };
