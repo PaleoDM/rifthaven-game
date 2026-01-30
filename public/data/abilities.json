@@ -1,0 +1,559 @@
+{
+  "punch": {
+    "id": "punch",
+    "name": "Punch",
+    "description": "A powerful melee strike.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 1,
+    "targetType": "enemy",
+    "damage": "1d10",
+    "levelRequired": 1
+  },
+  "healing_hands": {
+    "id": "healing_hands",
+    "name": "Healing Hands",
+    "description": "Minor healing touch.",
+    "type": "buff",
+    "cost": 1,
+    "costType": "ki",
+    "range": 1,
+    "targetType": "ally",
+    "healing": "1d4",
+    "levelRequired": 1
+  },
+  "poison": {
+    "id": "poison",
+    "name": "Poison",
+    "description": "Inflict ongoing poison damage.",
+    "type": "spell",
+    "cost": 2,
+    "costType": "ki",
+    "range": 2,
+    "targetType": "enemy",
+    "effect": {
+      "type": "poison",
+      "damagePerTurn": "1d4",
+      "durationOnFail": "1d6",
+      "durationOnSave": 2
+    },
+    "levelRequired": 3
+  },
+  "psychic_dagger": {
+    "id": "psychic_dagger",
+    "name": "Psychic Dagger",
+    "description": "A thrown blade of pure thought.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "damage": "1d6",
+    "bonusDamageIfHidden": "1d10",
+    "levelRequired": 1
+  },
+  "hide": {
+    "id": "hide",
+    "name": "Hide",
+    "description": "Blend into shadows.",
+    "type": "toggle",
+    "cost": 0,
+    "costType": null,
+    "range": 0,
+    "targetType": "self",
+    "effect": {
+      "type": "hidden",
+      "defenseBonus": 2,
+      "breaksOn": ["attack", "damage_taken"]
+    },
+    "levelRequired": 1
+  },
+  "expose_weakness": {
+    "id": "expose_weakness",
+    "name": "Expose Weakness",
+    "description": "Reveal a gap in the enemy's defenses.",
+    "type": "debuff",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "effect": {
+      "type": "exposed",
+      "defensePenalty": 2,
+      "duration": "next_attack"
+    },
+    "levelRequired": 3
+  },
+  "sacred_flame": {
+    "id": "sacred_flame",
+    "name": "Sacred Flame",
+    "description": "Divine fire descends on the target.",
+    "type": "spell",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "damage": "1d6",
+    "damageOnSave": "half",
+    "levelRequired": 1
+  },
+  "cure_light_wounds": {
+    "id": "cure_light_wounds",
+    "name": "Cure Light Wounds",
+    "description": "Mend wounds with divine power.",
+    "type": "buff",
+    "cost": 2,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "ally",
+    "healing": "2d6",
+    "levelRequired": 1
+  },
+  "restoration": {
+    "id": "restoration",
+    "name": "Restoration",
+    "description": "Cleanse afflictions from an ally.",
+    "type": "buff",
+    "cost": 3,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "ally",
+    "effect": {
+      "type": "remove_status",
+      "count": 1
+    },
+    "levelRequired": 3
+  },
+  "shillelagh": {
+    "id": "shillelagh",
+    "name": "Shillelagh",
+    "description": "A druidic staff strike.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 1,
+    "targetType": "enemy",
+    "damage": "1d8",
+    "levelRequired": 1
+  },
+  "grasping_vine": {
+    "id": "grasping_vine",
+    "name": "Grasping Vine",
+    "description": "Vines erupt to entangle the target.",
+    "type": "spell",
+    "cost": 2,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "enemy",
+    "effect": {
+      "type": "immobilized",
+      "durationOnFail": 1,
+      "effectOnSave": "half_movement"
+    },
+    "levelRequired": 1
+  },
+  "barkskin": {
+    "id": "barkskin",
+    "name": "Barkskin",
+    "description": "Harden an ally's skin like bark.",
+    "type": "buff",
+    "cost": 3,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "ally",
+    "effect": {
+      "type": "barkskin",
+      "defenseBonus": 2,
+      "duration": "1d4+2"
+    },
+    "levelRequired": 1
+  },
+  "entangle": {
+    "id": "entangle",
+    "name": "Entangle",
+    "description": "Grasping vines erupt from the ground, creating treacherous terrain.",
+    "type": "spell",
+    "cost": 4,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "area",
+    "areaSize": { "width": 2, "height": 2 },
+    "damage": "1d6",
+    "damageOnSave": "half",
+    "effect": {
+      "type": "entangle_zone",
+      "duration": "1d4",
+      "createsDifficultTerrain": true,
+      "damageOnEntry": true,
+      "damageOnTurnStart": true
+    },
+    "levelRequired": 3
+  },
+  "eldritch_blast": {
+    "id": "eldritch_blast",
+    "name": "Eldritch Blast",
+    "description": "A beam of crackling energy.",
+    "type": "spell",
+    "cost": 0,
+    "costType": null,
+    "range": 3,
+    "targetType": "enemy",
+    "damage": "1d10",
+    "damageOnSave": "half",
+    "levelRequired": 1
+  },
+  "hold": {
+    "id": "hold",
+    "name": "Hold",
+    "description": "Freeze the target in place with arcane force.",
+    "type": "spell",
+    "cost": 4,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "enemy",
+    "effect": {
+      "type": "held",
+      "durationOnFail": "1d4",
+      "durationOnSave": 1
+    },
+    "levelRequired": 1
+  },
+  "shatter": {
+    "id": "shatter",
+    "name": "Shatter",
+    "description": "Explosive burst of sound.",
+    "type": "spell",
+    "cost": 5,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "area",
+    "areaSize": { "width": 2, "height": 2 },
+    "damage": "3d6",
+    "damageOnSave": "half",
+    "levelRequired": 3
+  },
+  "slam": {
+    "id": "slam",
+    "name": "Slam",
+    "description": "A clumsy but forceful blow.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 1,
+    "targetType": "enemy",
+    "damage": "1d4"
+  },
+  "scratch": {
+    "id": "scratch",
+    "name": "Scratch",
+    "description": "Raking claws tear at flesh.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 1,
+    "targetType": "enemy",
+    "damage": "1d6"
+  },
+  "fire_spit": {
+    "id": "fire_spit",
+    "name": "Fire Spit",
+    "description": "A gout of hellfire spat at range.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "damage": "1d4"
+  },
+  "tail_swipe": {
+    "id": "tail_swipe",
+    "name": "Tail Swipe",
+    "description": "A powerful sweeping tail strike.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 1,
+    "targetType": "enemy",
+    "damage": "1d8"
+  },
+  "spine_volley": {
+    "id": "spine_volley",
+    "name": "Spine Volley",
+    "description": "Launches a barrage of bony spines.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "damage": "1d6"
+  },
+  "club_smash": {
+    "id": "club_smash",
+    "name": "Club Smash",
+    "description": "A brutal swing with a massive club.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 1,
+    "targetType": "enemy",
+    "damage": "2d4"
+  },
+  "crossbow_bolt": {
+    "id": "crossbow_bolt",
+    "name": "Crossbow Bolt",
+    "description": "A heavy bolt fired from a crude crossbow.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 3,
+    "targetType": "enemy",
+    "damage": "1d8"
+  },
+  "arcane_bolt": {
+    "id": "arcane_bolt",
+    "name": "Arcane Bolt",
+    "description": "A crackling bolt of raw magic.",
+    "type": "spell",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "damage": "1d6",
+    "damageOnSave": "half"
+  },
+  "heavy_strike": {
+    "id": "heavy_strike",
+    "name": "Heavy Strike",
+    "description": "A concussive blow that rattles the mind.",
+    "type": "spell",
+    "cost": 3,
+    "costType": "mana",
+    "range": 1,
+    "targetType": "enemy",
+    "damage": "1d6",
+    "damageOnSave": "half",
+    "effect": {
+      "type": "held",
+      "durationOnFail": "1d4",
+      "durationOnSave": 1
+    }
+  },
+  "celestial_storm": {
+    "id": "celestial_storm",
+    "name": "Celestial Storm",
+    "description": "A devastating eruption of divine energy.",
+    "type": "spell",
+    "cost": 10,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "area",
+    "areaSize": { "width": 3, "height": 3 },
+    "damage": "4d6",
+    "damageOnSave": "half"
+  },
+  "bite": {
+    "id": "bite",
+    "name": "Bite",
+    "description": "Savage jaws clamp down on flesh.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 1,
+    "targetType": "enemy",
+    "damage": "1d8"
+  },
+  "fire_breath": {
+    "id": "fire_breath",
+    "name": "Fire Breath",
+    "description": "A devastating cone of hellfire.",
+    "type": "spell",
+    "cost": 6,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "area",
+    "areaSize": { "width": 2, "height": 2 },
+    "damage": "4d4",
+    "damageOnSave": "half"
+  },
+  "poison_spit": {
+    "id": "poison_spit",
+    "name": "Poison Spit",
+    "description": "A glob of venomous spittle.",
+    "type": "spell",
+    "cost": 3,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "enemy",
+    "effect": {
+      "type": "poison",
+      "damagePerTurn": "1d4",
+      "durationOnFail": "1d6",
+      "durationOnSave": 2
+    }
+  },
+  "elemental_blast": {
+    "id": "elemental_blast",
+    "name": "Elemental Blast",
+    "description": "A focused burst of elemental energy.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 3,
+    "targetType": "enemy",
+    "damage": "1d8",
+    "levelRequired": 1
+  },
+  "dodge": {
+    "id": "dodge",
+    "name": "Dodge",
+    "description": "Enter a defensive stance, becoming harder to hit.",
+    "type": "buff",
+    "cost": 2,
+    "costType": "ki",
+    "range": 0,
+    "targetType": "self",
+    "effect": {
+      "type": "dodge",
+      "defenseBonus": 2,
+      "duration": "1d4"
+    },
+    "levelRequired": 1
+  },
+  "reckless_strike": {
+    "id": "reckless_strike",
+    "name": "Reckless Strike",
+    "description": "A devastating swing with a glaive.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "damage": "1d12",
+    "levelRequired": 1
+  },
+  "rage": {
+    "id": "rage",
+    "name": "Rage",
+    "description": "Enter a furious battle trance, striking harder.",
+    "type": "buff",
+    "cost": 0,
+    "costType": null,
+    "range": 0,
+    "targetType": "self",
+    "effect": {
+      "type": "rage",
+      "attackBonus": 2,
+      "damageBonus": 2,
+      "duration": "1d4"
+    },
+    "levelRequired": 1
+  },
+  "trident": {
+    "id": "trident",
+    "name": "Trident",
+    "description": "A precise thrust with a gleaming trident.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "damage": "1d8",
+    "levelRequired": 1
+  },
+  "inspiration": {
+    "id": "inspiration",
+    "name": "Inspiration",
+    "description": "Rally an ally with a stirring battle cry.",
+    "type": "buff",
+    "cost": 3,
+    "costType": "mana",
+    "range": 3,
+    "targetType": "ally",
+    "effect": {
+      "type": "inspired",
+      "attackBonus": 2,
+      "resilienceBonus": 2,
+      "duration": "1d4"
+    },
+    "levelRequired": 1
+  },
+  "poison_dagger": {
+    "id": "poison_dagger",
+    "name": "Poison Dagger",
+    "description": "A venomous blade coated in dark ichor.",
+    "type": "spell",
+    "cost": 3,
+    "costType": "mana",
+    "range": 1,
+    "targetType": "enemy",
+    "effect": {
+      "type": "poison",
+      "damagePerTurn": "1d4",
+      "durationOnFail": "1d4",
+      "durationOnSave": 1
+    }
+  },
+  "crossbow": {
+    "id": "crossbow",
+    "name": "Crossbow",
+    "description": "A light crossbow shot.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "damage": "1d6"
+  },
+  "blackjack": {
+    "id": "blackjack",
+    "name": "Blackjack",
+    "description": "A weighted cudgel strike to the head.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 1,
+    "targetType": "enemy",
+    "damage": "1d8"
+  },
+  "throwing_knife": {
+    "id": "throwing_knife",
+    "name": "Throwing Knife",
+    "description": "A quick knife thrown at short range.",
+    "type": "attack",
+    "cost": 0,
+    "costType": null,
+    "range": 2,
+    "targetType": "enemy",
+    "damage": "1d6"
+  },
+  "hex_bomb": {
+    "id": "hex_bomb",
+    "name": "Hex Bomb",
+    "description": "Lobs a vial of volatile hexed powder that explodes.",
+    "type": "spell",
+    "cost": 4,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "area",
+    "areaSize": { "width": 2, "height": 2 },
+    "damage": "2d6",
+    "damageOnSave": "half"
+  },
+  "curse_of_debt": {
+    "id": "curse_of_debt",
+    "name": "Curse of Debt",
+    "description": "Marks the target with a debilitating curse that weakens their defenses.",
+    "type": "spell",
+    "cost": 2,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "enemy",
+    "effect": {
+      "type": "cursed",
+      "defensePenalty": 2,
+      "resiliencePenalty": 2,
+      "duration": "1d4"
+    }
+  }
+}

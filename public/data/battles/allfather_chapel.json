@@ -1,0 +1,42 @@
+{
+  "id": "allfather_chapel",
+  "displayName": "All Father's Chapel",
+  "mapImage": "map_allfather_chapel",
+  "gridWidth": 24,
+  "gridHeight": 16,
+  "heroLevel": 2,
+  "heroPositions": [
+    { "x": 3, "y": 12 },
+    { "x": 4, "y": 12 },
+    { "x": 5, "y": 12 },
+    { "x": 3, "y": 13 },
+    { "x": 4, "y": 13 }
+  ],
+  "enemies": [
+    { "type": "cultist_mook", "x": 8, "y": 5 },
+    { "type": "cultist_mook", "x": 10, "y": 5 },
+    { "type": "cultist_mook", "x": 12, "y": 5 },
+    { "type": "cultist_enforcer", "x": 9, "y": 3 },
+    { "type": "cultist_enforcer", "x": 11, "y": 3 },
+    { "type": "cultist_caster", "x": 10, "y": 2 }
+  ],
+  "chests": [
+    { "id": "chapel_chest_1", "x": 2, "y": 2 },
+    { "id": "chapel_chest_2", "x": 20, "y": 2 }
+  ],
+  "props": [],
+  "terrain": [],
+  "introCutscene": {
+    "dialogue": [
+      { "speaker": "Narrator", "text": "The chapel has been desecrated by cultists!" },
+      { "speaker": "Narrator", "text": "They must be stopped before they complete their ritual." }
+    ]
+  },
+  "victoryCutscene": {
+    "dialogue": [
+      { "speaker": "Narrator", "text": "The cultists have been vanquished." },
+      { "speaker": "Narrator", "text": "The chapel can be restored to its former glory." }
+    ]
+  },
+  "postVictoryMode": "explore"
+}

@@ -1,0 +1,76 @@
+{
+  "id": "abandoned_distillery",
+  "displayName": "Abandoned Distillery",
+  "mapImage": "map_abandoned_distillery",
+  "gridWidth": 16,
+  "gridHeight": 16,
+  "heroLevel": 1,
+  "heroStartPositions": [
+    { "x": 4, "y": 15 },
+    { "x": 5, "y": 15 },
+    { "x": 6, "y": 15 },
+    { "x": 7, "y": 15 },
+    { "x": 3, "y": 15 }
+  ],
+  "enemies": [
+    { "type": "cultist_mook", "x": 7, "y": 10 },
+    { "type": "cultist_caster", "x": 10, "y": 6 },
+    { "type": "cultist_mook", "x": 6, "y": 7 },
+    { "type": "cultist_mook", "x": 10, "y": 8 },
+    { "type": "cultist_mook", "x": 3, "y": 12 },
+    { "type": "cultist_caster", "x": 7, "y": 4 },
+    { "type": "cultist_caster", "x": 11, "y": 11 }
+  ],
+  "chests": [],
+  "props": [
+    { "id": "dante_defeated", "sprite": "sprite_dante_left", "x": 8, "y": 8, "rotation": 90 }
+  ],
+  "terrain": [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
+    [0,2,2,2,2,2,1,0,0,0,2,2,2,2,2,0],
+    [0,2,2,2,2,2,1,0,0,2,2,2,2,2,2,0],
+    [0,2,2,2,2,2,1,0,0,0,2,1,1,1,2,0],
+    [0,2,1,1,1,2,1,0,0,0,0,1,1,1,2,0],
+    [0,2,0,0,0,1,1,0,0,0,0,1,1,1,2,0],
+    [0,2,0,0,0,1,1,0,0,0,0,2,2,1,2,0],
+    [0,2,0,0,0,1,0,0,0,0,0,2,2,1,2,0],
+    [0,2,0,0,0,1,1,0,0,0,0,1,2,2,2,0],
+    [0,2,0,0,0,1,1,0,0,0,0,1,2,2,2,0],
+    [0,2,0,0,0,1,0,0,0,1,0,1,1,1,2,0],
+    [0,2,0,0,0,0,0,0,1,1,0,1,1,1,2,0],
+    [0,2,0,0,0,0,0,1,1,0,0,2,2,2,2,0],
+    [0,2,2,2,2,0,0,2,2,2,2,2,2,2,2,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+  ],
+  "introCutscene": [],
+  "victoryCutscene": [
+    { "speaker": "Narrator", "text": "The last cultist falls and our heroes approach the man in the chair." },
+    { "speaker": "Narrator", "text": "The man stirs, and we see a terrible scar across his throat. He appears to be mute." },
+    { "speaker": "Narrator", "text": "Surprisingly, it's the bird who speaks!" },
+    { "speaker": "Dante & Inferno", "text": "Squawk! Boy are we glad to see you! Showed up just in time, yes you did.", "portrait": "portrait_dante" },
+    { "speaker": "Dante & Inferno", "text": "You can call me Inferno. Tall, Dark, and Handsome over here is Dante.", "portrait": "portrait_dante" },
+    { "speaker": "Ty", "text": "This is the coolest vibe I've ever seen...", "portrait": "portrait_ty" },
+    { "speaker": "Veil", "text": "And you'll be our employer I take it?", "portrait": "portrait_veil" },
+    { "speaker": "Dante & Inferno", "text": "Right you are! Looking for revolutionaries is what we're doing.", "portrait": "portrait_dante" },
+    { "speaker": "Dante & Inferno", "text": "Sparkworks is being occupied by organized thugs.", "portrait": "portrait_dante" },
+    { "speaker": "Dante & Inferno", "text": "A set of cultists called The Hushed Choir, and their mercenary group The Ledgermen.", "portrait": "portrait_dante" },
+    { "speaker": "Dante & Inferno", "text": "We're looking for folks willing to help the resistance!", "portrait": "portrait_dante" },
+    { "speaker": "Arden", "text": "Well, that sounds like a chance to be a hero. And look good doing it!", "portrait": "portrait_arden" },
+    { "speaker": "Quin", "text": "And it pays? I find myself between Fortunes, at the moment.", "portrait": "portrait_quin" },
+    { "speaker": "Dante & Inferno", "text": "Coin? Sure, we can pay coin. Or we can negotiate a stake.", "portrait": "portrait_dante" },
+    { "speaker": "Dante & Inferno", "text": "Help us help these people, and be part of building what comes next.", "portrait": "portrait_dante" },
+    { "speaker": "Thorn", "text": "The rope that guides the ox to water is the same rope that drags it to slaughter. Yes, we will help.", "portrait": "portrait_thorn" },
+    { "speaker": "Dante & Inferno", "text": "Great. The resistance is gathering at the chapel of the All Hammer.", "portrait": "portrait_dante" },
+    { "speaker": "Dante & Inferno", "text": "Make your way there and speak to Sister Elarra.", "portrait": "portrait_dante" },
+    { "speaker": "Dante & Inferno", "text": "But be careful, the streets are crawling with Cultists and Ledgermen!", "portrait": "portrait_dante" }
+  ],
+  "postVictoryMode": "explore",
+  "playerStart": { "x": 8, "y": 9 },
+  "exitTrigger": {
+    "bounds": { "x1": 5, "y1": 14, "x2": 6, "y2": 15 },
+    "destination": "SparkworksScene"
+  },
+  "returnPosition": { "x": 11, "y": 9 },
+  "healPartyOnVictory": true
+}

@@ -1,0 +1,41 @@
+{
+  "id": "street",
+  "displayName": "Street Ambush",
+  "mapImage": "map_street",
+  "gridWidth": 32,
+  "gridHeight": 32,
+  "heroLevel": 1,
+  "heroPositions": [
+    { "x": 15, "y": 28 },
+    { "x": 16, "y": 28 },
+    { "x": 17, "y": 28 },
+    { "x": 15, "y": 29 },
+    { "x": 16, "y": 29 }
+  ],
+  "enemies": [
+    { "type": "ledgerman_mook", "x": 10, "y": 15 },
+    { "type": "ledgerman_mook", "x": 12, "y": 15 },
+    { "type": "ledgerman_mook", "x": 20, "y": 15 },
+    { "type": "ledgerman_enforcer", "x": 15, "y": 12 },
+    { "type": "ledgerman_hexer", "x": 15, "y": 10 }
+  ],
+  "chests": [
+    { "id": "street_chest_1", "x": 5, "y": 5 },
+    { "id": "street_chest_2", "x": 25, "y": 5 }
+  ],
+  "props": [],
+  "terrain": [],
+  "introCutscene": {
+    "dialogue": [
+      { "speaker": "Narrator", "text": "The Ledgermen have set an ambush!" },
+      { "speaker": "Narrator", "text": "There's no way around them..." }
+    ]
+  },
+  "victoryCutscene": {
+    "dialogue": [
+      { "speaker": "Narrator", "text": "The Ledgermen retreat into the shadows." },
+      { "speaker": "Narrator", "text": "The streets are safe... for now." }
+    ]
+  },
+  "postVictoryMode": "return_to_sparkworks"
+}

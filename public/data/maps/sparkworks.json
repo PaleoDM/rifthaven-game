@@ -1,0 +1,79 @@
+{
+  "id": "sparkworks",
+  "displayName": "Sparkworks District",
+  "gridWidth": 24,
+  "gridHeight": 24,
+  "terrain": [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2],
+    [2,2,2,2,2,0,0,0,0,0,0,0,0,2,2,2,2,0,2,2,2,2,2,2],
+    [2,2,2,2,2,0,0,0,2,2,0,0,0,2,2,2,2,0,0,2,2,2,2,2],
+    [2,2,2,2,2,0,0,0,0,0,0,0,0,2,2,2,2,2,0,2,2,2,2,2],
+    [2,2,2,2,2,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,2,2,2,2],
+    [2,2,2,2,2,0,0,0,0,0,0,0,2,2,0,0,2,2,0,0,2,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2],
+    [0,0,2,2,2,2,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,2,2,2],
+    [0,0,2,2,2,2,0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,2,2],
+    [0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,2,2],
+    [0,0,0,2,2,2,2,0,0,0,2,0,0,0,0,2,0,0,2,0,0,0,2,2],
+    [0,0,0,2,2,2,2,0,0,2,2,2,0,0,0,2,0,0,0,0,0,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2],
+    [0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2],
+    [0,0,0,2,2,0,2,2,2,0,0,0,0,2,0,2,0,2,0,2,2,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2],
+    [0,2,2,2,0,2,2,2,0,0,0,0,2,2,0,2,2,0,0,2,2,2,2,2],
+    [0,2,2,2,0,0,0,0,0,0,0,0,2,2,0,2,2,0,2,2,2,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2]
+  ],
+  "playerStart": { "x": 11, "y": 9 },
+  "locations": [
+    {
+      "id": "abandoned_distillery",
+      "name": "Abandoned Distillery",
+      "bounds": { "x1": 11, "y1": 8, "x2": 13, "y2": 10 },
+      "markerPosition": { "x": 12, "y": 9 },
+      "type": "blocked",
+      "description": ["The abandoned distillery where you first met Dante & Inferno.", "Too much heat on us to go back now."]
+    },
+    {
+      "id": "ashen_chapel",
+      "name": "Ashen Chapel",
+      "bounds": { "x1": 13, "y1": 4, "x2": 15, "y2": 6 },
+      "markerPosition": { "x": 14, "y": 5 },
+      "type": "proximity_battle",
+      "proximityDistance": 3,
+      "description": ["The Ashen Chapel - a place of refuge for the resistance.", "Sister Elarra awaits within."],
+      "battleMap": "sparkworks_street",
+      "battleIntro": ["As you approach the chapel, shadowy figures emerge from the alleyways!", "It's an ambush!"],
+      "postBattleExploreMap": "ashen_chapel"
+    },
+    {
+      "id": "graves_of_revolution",
+      "name": "Graves of Revolution",
+      "bounds": { "x1": 10, "y1": 14, "x2": 12, "y2": 16 },
+      "markerPosition": { "x": 11, "y": 15 },
+      "type": "blocked",
+      "description": ["The Graves of Revolution - a somber memorial to fallen heroes.", "Sparkworks is too dangerous to explore right now."]
+    },
+    {
+      "id": "hearthfire_tenements",
+      "name": "Hearthfire Tenements",
+      "bounds": { "x1": 13, "y1": 17, "x2": 15, "y2": 19 },
+      "markerPosition": { "x": 14, "y": 18 },
+      "type": "blocked",
+      "description": ["The Hearthfire Tenements - working-class housing in Sparkworks.", "Sparkworks is too dangerous to explore right now."]
+    },
+    {
+      "id": "noble_district",
+      "name": "Noble District",
+      "bounds": { "x1": 3, "y1": 5, "x2": 5, "y2": 7 },
+      "markerPosition": { "x": 4, "y": 6 },
+      "type": "blocked",
+      "description": ["The way to the Noble District lies beyond.", "Sparkworks is too dangerous to explore right now."]
+    }
+  ]
+}

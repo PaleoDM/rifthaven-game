@@ -1,0 +1,143 @@
+{
+  "healing_potion": {
+    "id": "healing_potion",
+    "name": "Healing Potion",
+    "description": "Restores 2d4 HP to an ally.",
+    "type": "consumable",
+    "subtype": "healing",
+    "effect": {
+      "type": "heal",
+      "amount": "2d4"
+    },
+    "range": 1,
+    "targetType": "ally",
+    "rarity": "common",
+    "lootWeight": 22
+  },
+  "distilled_dendritium": {
+    "id": "distilled_dendritium",
+    "name": "Distilled Dendritium",
+    "description": "Restores 2d4 MP or Ki to an ally.",
+    "type": "consumable",
+    "subtype": "restore_resource",
+    "effect": {
+      "type": "restore_resource",
+      "amount": "2d4"
+    },
+    "range": 1,
+    "targetType": "ally",
+    "rarity": "common",
+    "lootWeight": 18
+  },
+  "antidote": {
+    "id": "antidote",
+    "name": "Antidote",
+    "description": "Removes Poison from an ally.",
+    "type": "consumable",
+    "subtype": "curative",
+    "effect": {
+      "type": "remove_condition",
+      "condition": "poison"
+    },
+    "range": 1,
+    "targetType": "ally",
+    "rarity": "uncommon",
+    "lootWeight": 12
+  },
+  "celestial_tears": {
+    "id": "celestial_tears",
+    "name": "Celestial Tears",
+    "description": "Removes any one condition from an ally.",
+    "type": "consumable",
+    "subtype": "curative",
+    "effect": {
+      "type": "remove_condition",
+      "condition": "any"
+    },
+    "range": 1,
+    "targetType": "ally",
+    "rarity": "rare",
+    "lootWeight": 8
+  },
+  "damage_rune": {
+    "id": "damage_rune",
+    "name": "+1 Damage Rune",
+    "description": "Permanently grants +1 to all damage rolls. Applied to a hero of your choice.",
+    "type": "permanent_upgrade",
+    "subtype": "damage_bonus",
+    "effect": {
+      "type": "permanent_stat",
+      "stat": "damageBonus",
+      "amount": 1
+    },
+    "rarity": "rare",
+    "lootWeight": 15
+  },
+  "ambushers_ring": {
+    "id": "ambushers_ring",
+    "name": "Ambusher's Ring",
+    "description": "+2 ATK on your first attack each battle.",
+    "type": "equipment",
+    "subtype": "accessory",
+    "effect": {
+      "type": "first_attack_bonus",
+      "stat": "attack",
+      "amount": 2
+    },
+    "rarity": "uncommon",
+    "lootWeight": 5
+  },
+  "healers_pendant": {
+    "id": "healers_pendant",
+    "name": "Healer's Pendant",
+    "description": "+1 to your first healing roll each battle.",
+    "type": "equipment",
+    "subtype": "accessory",
+    "effect": {
+      "type": "first_heal_bonus",
+      "amount": 1
+    },
+    "rarity": "uncommon",
+    "lootWeight": 5
+  },
+  "wardstone": {
+    "id": "wardstone",
+    "name": "Wardstone",
+    "description": "+2 RES on your first spell save each battle.",
+    "type": "equipment",
+    "subtype": "accessory",
+    "effect": {
+      "type": "first_save_bonus",
+      "stat": "resilience",
+      "amount": 2
+    },
+    "rarity": "uncommon",
+    "lootWeight": 5
+  },
+  "swift_anklet": {
+    "id": "swift_anklet",
+    "name": "Swift Anklet",
+    "description": "+2 to initiative rolls.",
+    "type": "equipment",
+    "subtype": "accessory",
+    "effect": {
+      "type": "initiative_bonus",
+      "amount": 2
+    },
+    "rarity": "uncommon",
+    "lootWeight": 5
+  },
+  "bloodstone": {
+    "id": "bloodstone",
+    "name": "Bloodstone",
+    "description": "Heal 2 HP on your first killing blow each battle.",
+    "type": "equipment",
+    "subtype": "accessory",
+    "effect": {
+      "type": "first_kill_heal",
+      "amount": 2
+    },
+    "rarity": "uncommon",
+    "lootWeight": 5
+  }
+}
