@@ -95,7 +95,7 @@
     "xpToNextLevel": 0,
     "hp": 12,
     "maxHp": 12,
-    "attack": 6,
+    "attack": 5,
     "defense": 11,
     "magic": 10,
     "resilience": 5,
