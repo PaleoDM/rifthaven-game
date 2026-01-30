@@ -2382,6 +2382,8 @@ export class BattleScene extends Phaser.Scene {
 
       if (result.effectApplied) {
         resultLines.push(`${target.name} is ${result.effectApplied.type}!`);
+        // Update condition markers to show new effect
+        updateConditionMarkers(target, this);
       }
 
       if (result.targetDefeated) {
@@ -6439,6 +6441,8 @@ export class BattleScene extends Phaser.Scene {
       if (result.effectApplied) {
         resultLines.push(`${target.name} is ${result.effectApplied.type}!`);
         // No separate debuff XP - already covered by resource XP if ability costs mana
+        // Update condition markers to show new effect
+        updateConditionMarkers(target, this);
       }
 
       if (result.targetDefeated) {
@@ -6505,6 +6509,8 @@ export class BattleScene extends Phaser.Scene {
           resultLines.push(`${target.name} gains ${result.effectApplied.type}!`);
         }
         // No separate buff XP - already covered by resource XP
+        // Update condition markers to show new buff
+        updateConditionMarkers(target, this);
       }
 
       // Combat log
@@ -6523,6 +6529,8 @@ export class BattleScene extends Phaser.Scene {
       if (result.effectApplied) {
         resultLines.push(`${this.activeUnit.name} is now ${result.effectApplied.type}!`);
         // No separate buff XP - already covered by resource XP if paid
+        // Update condition markers to show new buff (Rage, Dodge, etc.)
+        updateConditionMarkers(this.activeUnit, this);
       }
 
       // Combat log
@@ -6557,6 +6565,8 @@ export class BattleScene extends Phaser.Scene {
       if (result.effectApplied) {
         resultLines.push(`${target.name} is ${result.effectApplied.type}!`);
         // No separate debuff XP - already covered by resource XP if paid
+        // Update condition markers to show new debuff
+        updateConditionMarkers(target, this);
       }
 
       // Combat log
