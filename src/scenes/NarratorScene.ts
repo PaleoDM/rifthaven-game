@@ -335,6 +335,7 @@ export class NarratorScene extends Phaser.Scene {
           }
         };
         return {
+          heroId: 'arden',
           heroState: createHeroState(battleLevel),
           battleMap: variantId,
           returnScene: 'SparkworksScene',
