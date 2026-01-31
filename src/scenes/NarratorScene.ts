@@ -324,11 +324,21 @@ export class NarratorScene extends Phaser.Scene {
 
       case 'BattleScene': {
         const battleLevel = getLevelForBattle(variantId);
+        // Set prerequisite flags based on which battle/explore scene we're starting
+        const getPrerequisiteFlags = (battleId: string): Record<string, boolean> => {
+          switch (battleId) {
+            case 'ashen_chapel':
+              // Chapel exploration requires the street ambush to be complete
+              return { sparkworks_street_battle_complete: true };
+            default:
+              return {};
+          }
+        };
         return {
           heroState: createHeroState(battleLevel),
           battleMap: variantId,
           returnScene: 'SparkworksScene',
-          gameFlags: {},
+          gameFlags: getPrerequisiteFlags(variantId),
           devMode: true,
         };
       }

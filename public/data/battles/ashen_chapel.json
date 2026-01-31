@@ -15,6 +15,142 @@
   "enemies": [],
   "chests": [],
   "props": [],
+  "heroPositions": [
+    { "x": 8, "y": 7 },
+    { "x": 9, "y": 7 },
+    { "x": 14, "y": 7 },
+    { "x": 15, "y": 7 }
+  ],
+  "npcs": [
+    {
+      "id": "sister_elarra",
+      "name": "Sister Elarra",
+      "sprite": "sister_elarra",
+      "x": 11,
+      "y": 3,
+      "portrait": "sister_elarra",
+      "dialogue": [
+        "Welcome, brave heroes. From the gossip that's reached my ears, you've caused quite the stir in this district already.",
+        "I am Sister Elarra, of the Ashen Chapel. Though our temple has seen better days, it still serves to Forge community. And today, it seems, rebellion.",
+        "Please, be sure to visit the shrine to heal your wounds.",
+        "And our forges burn hot. Let me help with your equipment. It's the least I can do for our champions."
+      ]
+    },
+    {
+      "id": "dante",
+      "name": "Dante",
+      "sprite": "dante",
+      "x": 10,
+      "y": 9,
+      "portrait": "dante",
+      "facing": "east",
+      "dialogue": [
+        "The Hushed Choir and the Ledgermen won't sit idle after the pain we've dealt them.",
+        "But as you can see, many folks from Sparkworks are ready to take up arms alongside you.",
+        "I have a lead on some old smuggling tunnels we can use to move about the district a little better, and really hit them where it hurts!"
+      ]
+    },
+    {
+      "id": "villager_1",
+      "name": "Old Brewer",
+      "sprite": "villager_male",
+      "x": 3,
+      "y": 1,
+      "dialogue": [
+        "These damn Ledgermen. Always sitcking their nose in our district.",
+        "Sparkworks finally got some fight in it again. Saw a constable strung up from a lamppost yesterday. Can't say I shed any tears."
+      ]
+    },
+    {
+      "id": "child_1",
+      "name": "Zeke",
+      "sprite": "child_male",
+      "x": 4,
+      "y": 2,
+      "dialogue": [
+        "You're really here! I told everyone what you did taking out those Ledgermen out on the street!",
+        "The whole district's talking about it. They say you killed their mage and everything!",
+        "Sister Elarra says I did good spreading the word. Says I 'lit a spark.'"
+      ]
+    },
+    {
+      "id": "guard_1",
+      "name": "Chapel Guard",
+      "sprite": "guard",
+      "x": 3,
+      "y": 3,
+      "dialogue": [
+        "I'm no soldier—just an old mushroom farmer. Then I saw Arden (and his jawline...). I knew it was time to stand tall, for my boys.",
+        "The Ledgermen won't catch us off guard again. Neither will those masked cultists from the Hushed Choir."
+      ]
+    },
+    {
+      "id": "child_2",
+      "name": "Child",
+      "sprite": "child_female",
+      "x": 4,
+      "y": 4,
+      "dialogue": [
+        "Zeke says you fought a whole army! And one of you came back from the DEAD!",
+        "Is it true there's a big oak man who can talk to trees?"
+      ]
+    },
+    {
+      "id": "villager_2",
+      "name": "Refugee Woman",
+      "sprite": "villager_female",
+      "x": 18,
+      "y": 1,
+      "dialogue": [
+        "I haven't seen this place so abuzz since the old days. We've got to keep this energy going.",
+        "Don't look at me like that. This district used to mean something. Those old Victorian homes on the cliff? My family built one of them.",
+        "If you can remind people what we were... what we could be again... it was worth every sacrifice today."
+      ]
+    },
+    {
+      "id": "child_3",
+      "name": "Child",
+      "sprite": "child_female",
+      "x": 19,
+      "y": 2,
+      "dialogue": [
+        "My papa went to the House of Respite to talk to the Stoutwaters about joining the resistance!",
+        "Mama says we have to be brave. I'm trying!"
+      ]
+    },
+    {
+      "id": "guard_2",
+      "name": "Young Guard",
+      "sprite": "guard",
+      "x": 19,
+      "y": 3,
+      "dialogue": [
+        "My father says we've got to take up arms and stand together. Said we're the first line now.",
+        "I've been practicing all night. If those freaky cultists show up here, we'll be ready."
+      ]
+    },
+    {
+      "id": "villager_3",
+      "name": "Grateful Refugee",
+      "sprite": "villager_male",
+      "x": 18,
+      "y": 4,
+      "dialogue": [
+        "You gave us something we haven't had in years—hope.",
+        "That mysterious Dante's got a good eye for talent. When Inferno told us he'd found people who could help... well, I wasn't so sure.",
+        "Not anymore."
+      ]
+    },
+    {
+      "id": "moradin_shrine",
+      "name": "Shrine of Moradin",
+      "sprite": "moradin_shrine",
+      "x": 12,
+      "y": 3,
+      "isShrine": true,
+      "dialogue": []
+    }
+  ],
   "terrain": [
     [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
     [2,2,2,0,0,0,2,2,1,1,1,1,1,1,1,1,2,2,0,0,1,2,2,2],

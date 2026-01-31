@@ -55,6 +55,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('portrait_leon', 'assets/portraits/leon.png');
     // NPCs
     this.load.image('portrait_dante', 'assets/portraits/dante.png');
+    this.load.image('portrait_sister_elarra', 'assets/portraits/sister_elarra.png');
 
     // Title screen
     this.load.image('title_screen', 'assets/title_screen.png');
@@ -91,6 +92,18 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('sprite_dante_back', 'assets/sprites/npcs/dante_back.png');
     this.load.image('sprite_dante_left', 'assets/sprites/npcs/dante_left.png');
     this.load.image('sprite_dante_right', 'assets/sprites/npcs/dante_right.png');
+
+    // Sister Elarra NPC (Ashen Chapel)
+    this.load.image('sprite_sister_elarra_front', 'assets/sprites/npcs/sister_elarra_front.png');
+    this.load.image('sprite_sister_elarra_back', 'assets/sprites/npcs/sister_elarra_back.png');
+    this.load.image('sprite_sister_elarra_left', 'assets/sprites/npcs/sister_elarra_left.png');
+    this.load.image('sprite_sister_elarra_right', 'assets/sprites/npcs/sister_elarra_right.png');
+
+    // Moradin Shrine (Ashen Chapel)
+    this.load.image('sprite_moradin_shrine_front', 'assets/sprites/npcs/moradin_shrine_front.png');
+    this.load.image('sprite_moradin_shrine_back', 'assets/sprites/npcs/moradin_shrine_back.png');
+    this.load.image('sprite_moradin_shrine_left', 'assets/sprites/npcs/moradin_shrine_left.png');
+    this.load.image('sprite_moradin_shrine_right', 'assets/sprites/npcs/moradin_shrine_right.png');
 
     // Object sprites (chests, etc.) - 4 directions
     this.load.image('sprite_chest_closed_front', 'assets/sprites/objects/chest_closed_front.png');

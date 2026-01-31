@@ -63,6 +63,8 @@ export class MenuScene extends Phaser.Scene {
   private escKey!: Phaser.Input.Keyboard.Key;
   private upKey!: Phaser.Input.Keyboard.Key;
   private downKey!: Phaser.Input.Keyboard.Key;
+  private leftKey!: Phaser.Input.Keyboard.Key;
+  private rightKey!: Phaser.Input.Keyboard.Key;
   private enterKey!: Phaser.Input.Keyboard.Key;
   private tabKey!: Phaser.Input.Keyboard.Key;
 
@@ -81,9 +83,11 @@ export class MenuScene extends Phaser.Scene {
   private progressBars: ProgressBar[] = [];
 
   // Combat view
-  private combatMenuOptions: string[] = ['General', 'Experience', 'Movement', 'Conditions', 'HP', 'Vicas', 'Azrael', 'Lyra', 'Thump', 'Rooker'];
+  private combatMenuOptions: string[] = ['General', 'Experience', 'Movement', 'Conditions', 'HP', 'Arden', 'Quin', 'Veil', 'Ty', 'Thorn'];
   private combatSelectedIndex: number = 0;
   private combatMenuTexts: Phaser.GameObjects.Text[] = [];
+  private combatContentScrollOffset: number = 0;
+  private combatContentMaxScroll: number = 0;
 
   // Inventory view
   private inventoryElements: Phaser.GameObjects.GameObject[] = [];
@@ -145,6 +149,8 @@ export class MenuScene extends Phaser.Scene {
     this.escKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
     this.upKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.downKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+    this.leftKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    this.rightKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     this.enterKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     this.tabKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.TAB);
 
@@ -879,7 +885,7 @@ export class MenuScene extends Phaser.Scene {
     this.hrothgarSelectedIndex = Math.min(this.hrothgarSelectedIndex, this.hrothgarMenuOptions.length - 1);
 
     // Title
-    const title = this.add.text(this.CONTENT_X + 20, 20, "Hrothgar's Services", {
+    const title = this.add.text(this.CONTENT_X + 20, 20, "Elarra's Services", {
       fontFamily: 'monospace',
       fontSize: '18px',
       color: '#f0d866',
@@ -1669,51 +1675,102 @@ export class MenuScene extends Phaser.Scene {
   }
 
   private renderConditionsGuide(x: number, y: number, width: number): void {
+    const visibleHeight = GAME_CONFIG.HEIGHT - 100; // Visible area height
     const lines = [
-      { text: 'CONDITIONS', color: '#f0d866', size: '16px' },
+      { text: 'CONDITIONS (Left/Right to scroll)', color: '#f0d866', size: '16px' },
       { text: '', color: '#ffffff', size: '12px' },
-      { text: 'Poison (purple border)', color: '#aa44aa', size: '14px' },
+      { text: 'DEBUFFS', color: '#ff6666', size: '14px' },
+      { text: '', color: '#ffffff', size: '12px' },
+      { text: 'Poison (green border)', color: '#00ff00', size: '14px' },
       { text: '  Take damage at start of each turn.', color: '#cccccc', size: '12px' },
       { text: '  Duration: 2-3 rounds (less on save).', color: '#888888', size: '11px' },
       { text: '', color: '#ffffff', size: '12px' },
-      { text: 'Held (yellow border)', color: '#ffff44', size: '14px' },
+      { text: 'Held (teal border)', color: '#00ffff', size: '14px' },
       { text: '  Cannot take any action on your turn.', color: '#cccccc', size: '12px' },
-      { text: '  Duration: 2 rounds (1 on save).', color: '#888888', size: '11px' },
+      { text: '  Duration: 1-4 rounds (1 on save).', color: '#888888', size: '11px' },
       { text: '', color: '#ffffff', size: '12px' },
-      { text: 'Immobilized (orange border)', color: '#ff8844', size: '14px' },
+      { text: 'Immobilized (blue border)', color: '#4444ff', size: '14px' },
       { text: '  Cannot move but can still act.', color: '#cccccc', size: '12px' },
       { text: '  Duration: 1 round.', color: '#888888', size: '11px' },
       { text: '', color: '#ffffff', size: '12px' },
-      { text: 'Hidden (dark blue border)', color: '#4444aa', size: '14px' },
-      { text: '  +2 DEF bonus.', color: '#cccccc', size: '12px' },
-      { text: '  Breaks when you attack or take damage.', color: '#888888', size: '11px' },
-      { text: '', color: '#ffffff', size: '12px' },
-      { text: 'Exposed (pink border)', color: '#ff88ff', size: '14px' },
+      { text: 'Exposed (orange border)', color: '#ffa500', size: '14px' },
       { text: '  -2 DEF penalty.', color: '#cccccc', size: '12px' },
       { text: '  Clears after you are attacked.', color: '#888888', size: '11px' },
       { text: '', color: '#ffffff', size: '12px' },
-      { text: 'Barkskin (green border)', color: '#44aa44', size: '14px' },
-      { text: '  +2 DEF bonus.', color: '#cccccc', size: '12px' },
-      { text: '  Duration: 3 rounds.', color: '#888888', size: '11px' },
+      { text: 'Unconscious (black border)', color: '#888888', size: '14px' },
+      { text: '  At 0 HP. Cannot act or move.', color: '#cccccc', size: '12px' },
+      { text: '  Healing revives the unit.', color: '#888888', size: '11px' },
       { text: '', color: '#ffffff', size: '12px' },
-      { text: 'REMOVING CONDITIONS', color: '#88ff88', size: '14px' },
+      { text: 'BUFFS', color: '#88ff88', size: '14px' },
+      { text: '', color: '#ffffff', size: '12px' },
+      { text: 'Hidden (purple border)', color: '#aa44aa', size: '14px' },
+      { text: '  +2 DEF bonus.', color: '#cccccc', size: '12px' },
+      { text: '  Breaks when you attack or take damage.', color: '#888888', size: '11px' },
+      { text: '', color: '#ffffff', size: '12px' },
+      { text: 'Barkskin (brown border)', color: '#cd853f', size: '14px' },
+      { text: '  +2 DEF bonus.', color: '#cccccc', size: '12px' },
+      { text: '  Duration: 3-6 rounds.', color: '#888888', size: '11px' },
+      { text: '', color: '#ffffff', size: '12px' },
+      { text: 'Rage (red border)', color: '#ff4444', size: '14px' },
+      { text: '  +2 ATK and +2 damage per hit.', color: '#cccccc', size: '12px' },
+      { text: '  Duration: 1-4 rounds.', color: '#888888', size: '11px' },
+      { text: '', color: '#ffffff', size: '12px' },
+      { text: 'Inspired (gold border)', color: '#ffd700', size: '14px' },
+      { text: '  +2 ATK and +2 RES.', color: '#cccccc', size: '12px' },
+      { text: '  Duration: 1-4 rounds.', color: '#888888', size: '11px' },
+      { text: '', color: '#ffffff', size: '12px' },
+      { text: 'Dodge (light blue border)', color: '#00bfff', size: '14px' },
+      { text: '  +2 DEF bonus (evasive stance).', color: '#cccccc', size: '12px' },
+      { text: '  Duration: 1-4 rounds.', color: '#888888', size: '11px' },
+      { text: '', color: '#ffffff', size: '12px' },
+      { text: 'REMOVING CONDITIONS', color: '#f0d866', size: '14px' },
       { text: '', color: '#ffffff', size: '12px' },
       { text: '  Some abilities can cleanse conditions.', color: '#cccccc', size: '12px' },
       { text: '  Otherwise, wait for duration to expire.', color: '#cccccc', size: '12px' },
     ];
 
-    let lineY = y + 10;
+    // Calculate total content height
+    let totalHeight = 10;
     lines.forEach(line => {
-      const text = this.add.text(x + 10, lineY, line.text, {
+      totalHeight += line.text === '' ? 8 : 18;
+    });
+    this.combatContentMaxScroll = Math.max(0, totalHeight - visibleHeight);
+
+    // Create a container for scrollable content
+    const container = this.add.container(x, y - this.combatContentScrollOffset);
+    this.contentElements.push(container);
+
+    let lineY = 10;
+    lines.forEach(line => {
+      const text = this.add.text(10, lineY, line.text, {
         fontFamily: 'monospace',
         fontSize: line.size,
         color: line.color,
         wordWrap: { width: width - 20 },
       });
       text.setResolution(GAME_CONFIG.TEXT_RESOLUTION);
-      this.contentElements.push(text);
+      container.add(text);
       lineY += line.text === '' ? 8 : 18;
     });
+
+    // Create a mask to clip content
+    const maskShape = this.make.graphics({ x: 0, y: 0 });
+    maskShape.fillRect(x, y, width, visibleHeight);
+    const mask = maskShape.createGeometryMask();
+    container.setMask(mask);
+    this.contentElements.push(maskShape);
+
+    // Show scroll indicator if content is scrollable
+    if (this.combatContentMaxScroll > 0) {
+      const scrollHint = this.add.text(x + width - 10, y + visibleHeight - 20,
+        this.combatContentScrollOffset < this.combatContentMaxScroll ? '▼' : '', {
+        fontFamily: 'monospace',
+        fontSize: '14px',
+        color: '#888888',
+      }).setOrigin(1, 0);
+      scrollHint.setResolution(GAME_CONFIG.TEXT_RESOLUTION);
+      this.contentElements.push(scrollHint);
+    }
   }
 
   private renderHPGuide(x: number, y: number, width: number): void {
@@ -1785,13 +1842,6 @@ export class MenuScene extends Phaser.Scene {
       { text: '', color: '#ffffff', size: '12px' },
     ];
 
-    // Add special ability note if applicable
-    if (heroId === 'azrael') {
-      lines.push({ text: 'SPECIAL: Double Action', color: '#ff88ff', size: '13px' });
-      lines.push({ text: '  If Azrael doesn\'t move, he gets 2 actions.', color: '#cccccc', size: '12px' });
-      lines.push({ text: '', color: '#ffffff', size: '12px' });
-    }
-
     lines.push({ text: 'ABILITIES', color: '#88ff88', size: '14px' });
     lines.push({ text: '', color: '#ffffff', size: '12px' });
 
@@ -1855,7 +1905,7 @@ export class MenuScene extends Phaser.Scene {
       lines.push({ text: `  Damage: ${abilityAny.damage}${damageOnSave}`, color: '#ff8888', size: '12px' });
     }
 
-    // Bonus damage (Azrael's hidden bonus)
+    // Bonus damage when hidden (sneak attack)
     if (abilityAny.bonusDamageIfHidden) {
       lines.push({ text: `  Sneak Attack: +${abilityAny.bonusDamageIfHidden} if hidden`, color: '#ff88ff', size: '12px' });
     }
@@ -1908,6 +1958,18 @@ export class MenuScene extends Phaser.Scene {
           break;
         case 'remove_status':
           lines.push({ text: '  Effect: Remove 1 negative status', color: '#88ffff', size: '12px' });
+          break;
+        case 'rage':
+          lines.push({ text: '  Effect: +2 ATK, +2 damage per hit', color: '#88ffff', size: '12px' });
+          lines.push({ text: `  Duration: ${effect.duration} rounds`, color: '#888888', size: '11px' });
+          break;
+        case 'inspired':
+          lines.push({ text: '  Effect: +2 ATK, +2 RES', color: '#88ffff', size: '12px' });
+          lines.push({ text: `  Duration: ${effect.duration} rounds`, color: '#888888', size: '11px' });
+          break;
+        case 'dodge':
+          lines.push({ text: '  Effect: +2 DEF (evasive stance)', color: '#88ffff', size: '12px' });
+          lines.push({ text: `  Duration: ${effect.duration} rounds`, color: '#888888', size: '11px' });
           break;
       }
     }
@@ -1983,6 +2045,7 @@ export class MenuScene extends Phaser.Scene {
         this.renderHeroCard(this.partyHeroIds[this.partySelectedIndex]);
       } else if (this.currentView === 'combat') {
         this.combatSelectedIndex = Math.max(0, this.combatSelectedIndex - 1);
+        this.combatContentScrollOffset = 0; // Reset scroll on menu change
         this.updateCombatMenuSelection();
         this.renderCombatContent();
       } else if (this.currentView === 'hrothgar') {
@@ -2004,6 +2067,7 @@ export class MenuScene extends Phaser.Scene {
         this.renderHeroCard(this.partyHeroIds[this.partySelectedIndex]);
       } else if (this.currentView === 'combat') {
         this.combatSelectedIndex = Math.min(this.combatMenuOptions.length - 1, this.combatSelectedIndex + 1);
+        this.combatContentScrollOffset = 0; // Reset scroll on menu change
         this.updateCombatMenuSelection();
         this.renderCombatContent();
       } else if (this.currentView === 'hrothgar') {
@@ -2013,6 +2077,21 @@ export class MenuScene extends Phaser.Scene {
         this.handleEquipmentInput('down');
       } else if (this.currentView === 'rune') {
         this.handleRuneInput('down');
+      }
+    }
+
+    // Left/Right for scrolling content in combat view
+    if (Phaser.Input.Keyboard.JustDown(this.leftKey)) {
+      if (this.currentView === 'combat' && this.combatContentMaxScroll > 0) {
+        this.combatContentScrollOffset = Math.max(0, this.combatContentScrollOffset - 60);
+        this.renderCombatContent();
+      }
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.rightKey)) {
+      if (this.currentView === 'combat' && this.combatContentMaxScroll > 0) {
+        this.combatContentScrollOffset = Math.min(this.combatContentMaxScroll, this.combatContentScrollOffset + 60);
+        this.renderCombatContent();
       }
     }
 

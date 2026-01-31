@@ -464,7 +464,7 @@
   "inspiration": {
     "id": "inspiration",
     "name": "Inspiration",
-    "description": "Rally an ally with a stirring battle cry.",
+    "description": "Rally an ally with a wink and a smile.",
     "type": "buff",
     "cost": 3,
     "costType": "mana",

@@ -197,6 +197,19 @@ export interface CutsceneLine {
   portrait?: string; // Optional portrait key
 }
 
+// NPC placement for exploration mode
+export interface NPCPlacement {
+  id: string; // Unique NPC ID (e.g. "sister_elarra", "villager_1")
+  name: string; // Display name
+  sprite: string; // Sprite key (e.g. "elarra", "villager_male", "child_female")
+  x: number;
+  y: number;
+  portrait?: string; // Optional portrait key for dialogue
+  dialogue: string[]; // Array of dialogue lines
+  isShrine?: boolean; // If true, this NPC is a shrine (triggers healing/save instead of dialogue)
+  facing?: 'north' | 'south' | 'east' | 'west'; // Optional facing direction (default: south)
+}
+
 export interface BattleConfig {
   id: string;
   displayName: string;
@@ -208,6 +221,8 @@ export interface BattleConfig {
   enemies: EnemyPlacement[];
   props?: PropPlacement[]; // Optional static decorations
   chests?: ChestPlacement[]; // Optional treasure chests (lootable after battle)
+  npcs?: NPCPlacement[]; // Optional NPCs for exploration mode
+  heroPositions?: Position[]; // Positions for party members (not the player) in exploration mode
   victoryCondition: 'defeat_all';
   defeatCondition: 'all_heroes_down';
   introCutscene?: string[] | CutsceneLine[]; // Simple strings or character-specific dialogue

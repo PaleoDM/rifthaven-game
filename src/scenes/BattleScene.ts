@@ -371,6 +371,19 @@ export class BattleScene extends Phaser.Scene {
     // Make main camera ignore dialogue (it will be rendered by uiCamera)
     this.cameras.main.ignore(this.dialogueRenderer.getContainer());
 
+    // Initialize choice menu for shrine interactions
+    this.createChoiceMenu();
+
+    // Listen for resume event (returning from MenuScene services)
+    this.events.on('resume', () => {
+      if (this.pendingServicesDialogue) {
+        this.pendingServicesDialogue = false;
+        this.time.delayedCall(100, () => {
+          this.showElarraEndingDialogue();
+        });
+      }
+    });
+
     // Reset battle stats
     this.battleStats = {
       enemiesDefeated: 0,
@@ -956,9 +969,9 @@ export class BattleScene extends Phaser.Scene {
     // ENTER key - context-dependent confirm
     const enterKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     enterKey.on('down', () => {
-      // Handle shrine save menu
-      if (this.shrineSaveMenuVisible) {
-        this.handleShrineSaveMenuInput('enter');
+      // Handle choice menu selection
+      if (this.choiceMenuVisible) {
+        this.selectChoiceMenuOption();
         return;
       }
 
@@ -995,6 +1008,20 @@ export class BattleScene extends Phaser.Scene {
         }
       }
 
+      // Handle NPC interaction during exploration
+      if (this.phase === 'post_battle_explore' && !this.npcDialogueActive) {
+        const adjacentNPC = this.getAdjacentNPC();
+        if (adjacentNPC) {
+          // If it's a shrine NPC, trigger shrine interaction instead of dialogue
+          if (adjacentNPC.isShrine && !this.shrineDialogueActive) {
+            this.handleShrineInteraction();
+          } else if (!adjacentNPC.isShrine) {
+            this.handleNPCInteraction();
+          }
+          return;
+        }
+      }
+
       if (this.isAOETargeting) {
         this.confirmAOETarget();
       } else if (this.isTargeting) {
@@ -1022,9 +1049,9 @@ export class BattleScene extends Phaser.Scene {
     // ESC to cancel/deselect, or open menu when nothing to cancel
     const escKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
     escKey.on('down', () => {
-      // Handle shrine save menu
-      if (this.shrineSaveMenuVisible) {
-        this.handleShrineSaveMenuInput('esc');
+      // Handle choice menu cancel
+      if (this.choiceMenuVisible) {
+        this.hideChoiceMenu();
         return;
       }
 
@@ -1141,14 +1168,16 @@ export class BattleScene extends Phaser.Scene {
     this.events.on('update', () => {
       const now = Date.now();
 
-      // Handle shrine save menu navigation
-      if (this.shrineSaveMenuVisible) {
+      // Handle choice menu navigation
+      if (this.choiceMenuVisible) {
         if (now - lastMoveTime > moveDelay) {
           if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
-            this.handleShrineSaveMenuInput('up');
+            this.choiceMenuSelectedIndex = Math.max(0, this.choiceMenuSelectedIndex - 1);
+            this.updateChoiceMenuSelection();
             lastMoveTime = now;
           } else if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
-            this.handleShrineSaveMenuInput('down');
+            this.choiceMenuSelectedIndex = Math.min(this.choiceMenuOptions.length - 1, this.choiceMenuSelectedIndex + 1);
+            this.updateChoiceMenuSelection();
             lastMoveTime = now;
           }
         }
@@ -3111,6 +3140,10 @@ export class BattleScene extends Phaser.Scene {
 
     // Spawn treasure chests for this battle map
     this.spawnExplorationChests();
+
+    // Spawn NPCs and party members for exploration
+    this.spawnExplorationNPCs();
+    this.spawnExplorationPartyMembers();
   }
 
   // Reference to party leader during exploration
@@ -3121,14 +3154,16 @@ export class BattleScene extends Phaser.Scene {
   // Exploration shrine (for Quetzi Shrine map)
   private explorationShrine: { sprite: Phaser.GameObjects.Sprite; gridX: number; gridY: number } | null = null;
   private shrineDialogueActive: boolean = false;
-  private shrineSaveMenuVisible: boolean = false;
-  private shrineSaveMenuContainer: Phaser.GameObjects.Container | null = null;
-  private shrineSaveMenuSelectedIndex: number = 0;
-  private shrineSaveMenuTexts: Phaser.GameObjects.Text[] = [];
-  private shrineSaveMenuMode: 'confirm' | 'slots' | 'overwrite' = 'confirm';
   private selectedSaveSlot: number = 1;
   private saveSlotPreviews: SaveSlotPreview[] = [];
-  private shrineSaveMenuOptions: string[] = [];
+
+  // Choice menu system (matching Ishetar style)
+  private choiceMenuContainer!: Phaser.GameObjects.Container;
+  private choiceMenuVisible: boolean = false;
+  private choiceMenuOptions: string[] = [];
+  private choiceMenuSelectedIndex: number = 0;
+  private choiceMenuTexts: Phaser.GameObjects.Text[] = [];
+  private choiceMenuCallback: ((choice: string) => void) | null = null;
 
   // Treasure chests (Phase 10 - Loot System)
   private explorationChests: { sprite: Phaser.GameObjects.Sprite; id: string; gridX: number; gridY: number; opened: boolean }[] = [];
@@ -3139,14 +3174,21 @@ export class BattleScene extends Phaser.Scene {
   private lootPopupActive: boolean = false;
   private lootPopupContainer: Phaser.GameObjects.Container | null = null;
 
+  // Exploration NPCs and party members
+  private explorationNPCs: { sprite: Phaser.GameObjects.Sprite; id: string; name: string; gridX: number; gridY: number; portrait?: string; dialogue: string[]; isShrine?: boolean }[] = [];
+  private explorationPartyMembers: { sprite: Phaser.GameObjects.Sprite; heroId: string; name: string; gridX: number; gridY: number }[] = [];
+  private npcDialogueActive: boolean = false;
+  private pendingServicesDialogue: boolean = false;
+
   /**
    * Handle exploration movement input (called from update)
    */
   private handleExplorationInput(): void {
     if (this.phase !== 'post_battle_explore' || !this.explorationLeader) return;
     if (this.explorationMoving) return;
-    if (this.shrineDialogueActive || this.shrineSaveMenuVisible) return;
+    if (this.shrineDialogueActive || this.choiceMenuVisible) return;
     if (this.lootPopupActive) return;
+    if (this.npcDialogueActive) return;
 
     let dx = 0;
     let dy = 0;
@@ -3214,6 +3256,11 @@ export class BattleScene extends Phaser.Scene {
       if (newX === chest.gridX && newY === chest.gridY) {
         return; // Can't walk through chests
       }
+    }
+
+    // Check if NPC is blocking the tile
+    if (this.isBlockedByNPC(newX, newY)) {
+      return; // Can't walk through NPCs
     }
 
     // Move the leader with smooth tweening
@@ -3381,9 +3428,9 @@ export class BattleScene extends Phaser.Scene {
       }
     });
 
-    // Show shrine dialogue (same as town shrine)
+    // Show shrine dialogue, then offer save choice (matching Ishetar style)
     this.dialogueRenderer.startDialogue(
-      ['*You burn your offering at the shrine. You find yourself fully rested. Would you like to record your progress for the bards?*'],
+      ['*You burn your offering at the shrine. You find yourself fully rested.*', 'Would you like to record your progress for the bards?'],
       'Shrine',
       () => {
         this.showShrineSaveMenu();
@@ -3392,49 +3439,77 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /**
-   * Show the save menu at the shrine (initial Yes/No confirmation)
+   * Show the save menu at the shrine (Yes/No choice menu)
    */
   private showShrineSaveMenu(): void {
-    this.shrineSaveMenuMode = 'confirm';
-    this.shrineSaveMenuOptions = ['Yes', 'No'];
-    this.renderShrineSaveMenu('Save Progress?');
+    this.showChoiceMenu(['Yes', 'No'], (choice) => {
+      if (choice === 'Yes') {
+        this.showSaveSlotSelection();
+      }
+      // Either way, resources already restored
+    });
   }
 
   /**
    * Show the slot selection menu
    */
-  private showSaveSlotSelectionMenu(): void {
+  private showSaveSlotSelection(): void {
     this.saveSlotPreviews = SaveManager.getAllSlotPreviews();
-    this.shrineSaveMenuMode = 'slots';
 
-    this.shrineSaveMenuOptions = this.saveSlotPreviews.map((preview) => {
+    const options: string[] = this.saveSlotPreviews.map((preview) => {
       if (preview.isEmpty) {
         return `Slot ${preview.slot}: [Empty]`;
       } else {
         const heroName = this.getHeroDisplayName(preview.mainHero || 'unknown');
         const level = preview.heroLevels?.[0] || 1;
-        const time = this.formatPlayTimeShrine(preview.playTime || 0);
+        const time = this.formatPlayTime(preview.playTime || 0);
         return `Slot ${preview.slot}: ${heroName} Lv${level} ${time}`;
       }
     });
-    this.shrineSaveMenuOptions.push('Cancel');
+    options.push('Cancel');
 
-    this.renderShrineSaveMenu('Select Save Slot');
+    this.showChoiceMenu(options, (choice) => {
+      if (choice === 'Cancel') {
+        return; // User cancelled
+      }
+
+      // Extract slot number from choice
+      const slotMatch = choice.match(/^Slot (\d+):/);
+      if (!slotMatch) return;
+
+      this.selectedSaveSlot = parseInt(slotMatch[1], 10);
+      const preview = this.saveSlotPreviews.find(p => p.slot === this.selectedSaveSlot);
+
+      if (preview && !preview.isEmpty) {
+        this.showOverwriteConfirmation();
+      } else {
+        this.saveGameFromShrine(this.selectedSaveSlot);
+      }
+    });
   }
 
   /**
-   * Show overwrite confirmation menu
+   * Show overwrite confirmation
    */
-  private showOverwriteConfirmationMenu(): void {
+  private showOverwriteConfirmation(): void {
     const preview = this.saveSlotPreviews.find(p => p.slot === this.selectedSaveSlot);
     const heroName = this.getHeroDisplayName(preview?.mainHero || 'unknown');
 
-    this.shrineSaveMenuMode = 'overwrite';
-    this.shrineSaveMenuOptions = ['Yes', 'No'];
-    this.renderShrineSaveMenu(`Overwrite ${heroName}?`);
+    this.dialogueRenderer.startDialogue(
+      [`Overwrite ${heroName}'s tale in Slot ${this.selectedSaveSlot}?`],
+      'Shrine',
+      () => {
+        this.showChoiceMenu(['Yes', 'No'], (choice) => {
+          if (choice === 'Yes') {
+            this.saveGameFromShrine(this.selectedSaveSlot);
+          }
+          // If No, just return without saving
+        });
+      }
+    );
   }
 
-  private formatPlayTimeShrine(seconds: number): string {
+  private formatPlayTime(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     if (hours > 0) {
@@ -3454,136 +3529,109 @@ export class BattleScene extends Phaser.Scene {
     return names[heroId] || heroId;
   }
 
-  /**
-   * Render the shrine save menu with current options
-   */
-  private renderShrineSaveMenu(title: string): void {
-    // Clean up existing menu
-    if (this.shrineSaveMenuContainer) {
-      this.shrineSaveMenuContainer.destroy();
-    }
+  // =========================================================================
+  // Choice Menu System (matching Ishetar style)
+  // =========================================================================
 
-    this.shrineSaveMenuVisible = true;
-    this.shrineSaveMenuSelectedIndex = 0;
-
-    const screenWidth = this.cameras.main.width;
-    const screenHeight = this.cameras.main.height;
-
-    // Calculate menu dimensions based on options
-    const menuWidth = this.shrineSaveMenuMode === 'slots' ? 280 : 200;
-    const menuHeight = this.shrineSaveMenuOptions.length * 25 + 60;
-
-    // Create menu container (fixed to screen)
-    this.shrineSaveMenuContainer = this.add.container(screenWidth / 2, screenHeight / 2);
-    this.shrineSaveMenuContainer.setScrollFactor(0);
-    this.shrineSaveMenuContainer.setDepth(3000);
-
-    // Background
-    const bg = this.add.rectangle(0, 0, menuWidth, menuHeight, 0x1a1a2e, 0.95);
-    bg.setStrokeStyle(2, 0x4a4a6a);
-    this.shrineSaveMenuContainer.add(bg);
-
-    // Title
-    const titleText = this.add.text(0, -menuHeight / 2 + 20, title, {
-      fontFamily: 'monospace',
-      fontSize: '16px',
-      color: '#f0d866',
-    }).setResolution(GAME_CONFIG.TEXT_RESOLUTION).setOrigin(0.5);
-    this.shrineSaveMenuContainer.add(titleText);
-
-    // Options
-    this.shrineSaveMenuTexts = [];
-    const startY = -menuHeight / 2 + 50;
-
-    this.shrineSaveMenuOptions.forEach((option, i) => {
-      const text = this.add.text(0, startY + i * 25, option, {
-        fontFamily: 'monospace',
-        fontSize: '14px',
-        color: i === 0 ? '#ffff00' : '#ffffff',
-      }).setResolution(GAME_CONFIG.TEXT_RESOLUTION).setOrigin(0.5);
-      this.shrineSaveMenuContainer!.add(text);
-      this.shrineSaveMenuTexts.push(text);
-    });
-
-    // Make main camera ignore this menu
-    this.cameras.main.ignore(this.shrineSaveMenuContainer);
+  private createChoiceMenu(): void {
+    this.choiceMenuContainer = this.add.container(0, 0);
+    this.choiceMenuContainer.setVisible(false);
+    this.choiceMenuContainer.setDepth(1000);
+    // Make UI camera ignore this (it's positioned in world space, follows main camera)
+    this.uiCamera.ignore(this.choiceMenuContainer);
   }
 
   /**
-   * Hide the shrine save menu
+   * Position choice menu relative to exploration leader
    */
-  private hideShrineSaveMenu(): void {
-    if (this.shrineSaveMenuContainer) {
-      this.shrineSaveMenuContainer.destroy();
-      this.shrineSaveMenuContainer = null;
-    }
-    this.shrineSaveMenuTexts = [];
-    this.shrineSaveMenuVisible = false;
+  private positionChoiceMenuForPlayer(): void {
+    if (!this.explorationLeader) return;
+    const playerWorldX = this.explorationLeader.gridX * GAME_CONFIG.TILE_SIZE + GAME_CONFIG.TILE_SIZE / 2;
+    const playerWorldY = this.explorationLeader.gridY * GAME_CONFIG.TILE_SIZE + GAME_CONFIG.TILE_SIZE / 2;
+    // Position above and to the right of player to avoid bottom cutoff
+    this.choiceMenuContainer.setPosition(playerWorldX + 50, playerWorldY - 80);
+  }
+
+  private showChoiceMenu(options: string[], callback: (choice: string) => void): void {
+    this.choiceMenuOptions = options;
+    this.choiceMenuCallback = callback;
+    this.choiceMenuSelectedIndex = 0;
+    this.choiceMenuVisible = true;
+
+    // Clear previous menu items
+    this.choiceMenuContainer.removeAll(true);
+    this.choiceMenuTexts = [];
+
+    const menuX = 0;
+    const menuY = 0;
+    const itemHeight = 20;
+    const padding = 8;
+
+    // Create text objects first to measure width
+    const tempTexts: Phaser.GameObjects.Text[] = [];
+    options.forEach((option, index) => {
+      const text = this.add.text(
+        menuX + padding,
+        menuY + padding + index * itemHeight,
+        '  ' + option, // Add space for selection indicator
+        {
+          fontFamily: 'monospace',
+          fontSize: '12px',
+          color: index === 0 ? '#ffff00' : '#ffffff',
+        }
+      );
+      text.setResolution(GAME_CONFIG.TEXT_RESOLUTION);
+      tempTexts.push(text);
+    });
+
+    // Calculate menu width based on longest option
+    const maxTextWidth = Math.max(...tempTexts.map(t => t.width));
+    const menuWidth = Math.max(110, maxTextWidth + padding * 2);
+    const menuHeight = options.length * itemHeight + padding * 2;
+
+    // Draw background
+    const bg = this.add.graphics();
+    bg.fillStyle(0x000000, 0.9);
+    bg.fillRoundedRect(menuX, menuY, menuWidth, menuHeight, 6);
+    bg.lineStyle(2, 0xffffff, 1);
+    bg.strokeRoundedRect(menuX, menuY, menuWidth, menuHeight, 6);
+    this.choiceMenuContainer.add(bg);
+
+    // Add the text objects to container
+    tempTexts.forEach((text) => {
+      this.choiceMenuTexts.push(text);
+      this.choiceMenuContainer.add(text);
+    });
+
+    // Position relative to player and show
+    this.positionChoiceMenuForPlayer();
+    this.updateChoiceMenuSelection();
+    this.choiceMenuContainer.setVisible(true);
+  }
+
+  private updateChoiceMenuSelection(): void {
+    this.choiceMenuTexts.forEach((text, index) => {
+      if (index === this.choiceMenuSelectedIndex) {
+        text.setColor('#ffff00');
+        text.setText('> ' + this.choiceMenuOptions[index]);
+      } else {
+        text.setColor('#ffffff');
+        text.setText('  ' + this.choiceMenuOptions[index]);
+      }
+    });
+  }
+
+  private hideChoiceMenu(): void {
+    this.choiceMenuContainer.setVisible(false);
+    this.choiceMenuVisible = false;
     this.shrineDialogueActive = false;
   }
 
-  /**
-   * Handle input for shrine save menu
-   */
-  private handleShrineSaveMenuInput(key: 'up' | 'down' | 'enter' | 'esc'): void {
-    if (!this.shrineSaveMenuVisible) return;
-
-    const maxIndex = this.shrineSaveMenuOptions.length - 1;
-
-    if (key === 'up') {
-      this.shrineSaveMenuSelectedIndex = Math.max(0, this.shrineSaveMenuSelectedIndex - 1);
-    } else if (key === 'down') {
-      this.shrineSaveMenuSelectedIndex = Math.min(maxIndex, this.shrineSaveMenuSelectedIndex + 1);
-    } else if (key === 'enter') {
-      this.handleShrineSaveMenuSelection();
-      return;
-    } else if (key === 'esc') {
-      this.hideShrineSaveMenu();
-      return;
-    }
-
-    // Update visual selection
-    this.shrineSaveMenuTexts.forEach((text, i) => {
-      text.setColor(i === this.shrineSaveMenuSelectedIndex ? '#ffff00' : '#ffffff');
-    });
-  }
-
-  /**
-   * Handle selection in shrine save menu based on current mode
-   */
-  private handleShrineSaveMenuSelection(): void {
-    const selectedOption = this.shrineSaveMenuOptions[this.shrineSaveMenuSelectedIndex];
-
-    if (this.shrineSaveMenuMode === 'confirm') {
-      if (selectedOption === 'Yes') {
-        this.showSaveSlotSelectionMenu();
-      } else {
-        this.hideShrineSaveMenu();
-      }
-    } else if (this.shrineSaveMenuMode === 'slots') {
-      if (selectedOption === 'Cancel') {
-        this.hideShrineSaveMenu();
-        return;
-      }
-
-      // Extract slot number from choice
-      const slotMatch = selectedOption.match(/^Slot (\d+):/);
-      if (!slotMatch) return;
-
-      this.selectedSaveSlot = parseInt(slotMatch[1], 10);
-      const preview = this.saveSlotPreviews.find(p => p.slot === this.selectedSaveSlot);
-
-      if (preview && !preview.isEmpty) {
-        this.showOverwriteConfirmationMenu();
-      } else {
-        this.saveGameFromShrine(this.selectedSaveSlot);
-      }
-    } else if (this.shrineSaveMenuMode === 'overwrite') {
-      if (selectedOption === 'Yes') {
-        this.saveGameFromShrine(this.selectedSaveSlot);
-      } else {
-        this.hideShrineSaveMenu();
-      }
+  private selectChoiceMenuOption(): void {
+    const selectedOption = this.choiceMenuOptions[this.choiceMenuSelectedIndex];
+    this.hideChoiceMenu();
+    if (this.choiceMenuCallback) {
+      this.choiceMenuCallback(selectedOption);
     }
   }
 
@@ -3595,22 +3643,23 @@ export class BattleScene extends Phaser.Scene {
     const sessionSeconds = Math.floor((Date.now() - this.sessionStartTime) / 1000);
     const totalPlayTime = this.playTime + sessionSeconds;
 
+    // Determine the current map for the save
+    const currentMap = this.battleMap === 'ashen_chapel' ? 'ashen_chapel_exploration' : 'quetzi_shrine_exploration';
+
     const saveData = {
       slot: slot,
       mainHero: this.heroId,
-      currentMap: 'quetzi_shrine_exploration',
+      currentMap: currentMap,
       playerPosition: this.explorationLeader ? { x: this.explorationLeader.gridX, y: this.explorationLeader.gridY } : { x: 0, y: 0 },
       playTime: totalPlayTime,
       heroState: this.heroState,
-      flags: { ...this.gameFlags, 'quetzi_shrine_battle_complete': true },
+      flags: { ...this.gameFlags, [`${this.battleMap}_battle_complete`]: true },
       timestamp: new Date().toISOString(),
       inventory: this.inventory,
       chests: this.chestStates,
     };
 
     const success = SaveManager.save(saveData);
-
-    this.hideShrineSaveMenu();
 
     if (success) {
       this.playTime = totalPlayTime;
@@ -6883,6 +6932,218 @@ export class BattleScene extends Phaser.Scene {
         opened: isOpened,
       });
     }
+  }
+
+  /**
+   * Spawn NPCs for exploration mode (from battle config)
+   */
+  private spawnExplorationNPCs(): void {
+    // Don't double-spawn if already created
+    if (this.explorationNPCs.length > 0) return;
+
+    const npcs = this.battleConfig.npcs;
+    if (!npcs || npcs.length === 0) return;
+
+    for (const npc of npcs) {
+      const pixelX = npc.x * GAME_CONFIG.TILE_SIZE + GAME_CONFIG.TILE_SIZE / 2;
+      const pixelY = npc.y * GAME_CONFIG.TILE_SIZE + GAME_CONFIG.TILE_SIZE / 2;
+
+      // Determine sprite suffix based on facing direction
+      const facingToSprite: Record<string, string> = {
+        north: 'back',
+        south: 'front',
+        east: 'right',
+        west: 'left',
+      };
+      const facingSuffix = facingToSprite[npc.facing || 'south'] || 'front';
+
+      // Try to load the NPC sprite, fall back to generic villager if not found
+      const spriteKey = `sprite_${npc.sprite}_${facingSuffix}`;
+      const fallbackKey = `sprite_villager_male_${facingSuffix}`;
+      const actualSpriteKey = this.textures.exists(spriteKey) ? spriteKey :
+                             (this.textures.exists(fallbackKey) ? fallbackKey : 'sprite_villager_male_front');
+
+      const npcSprite = this.add.sprite(pixelX, pixelY, actualSpriteKey);
+      npcSprite.setOrigin(0.5, 0.5);
+      npcSprite.setScale(GAME_CONFIG.TILE_SIZE / GAME_CONFIG.SPRITE_SIZE);
+      npcSprite.setDepth(10);
+
+      // Make UI camera ignore this sprite
+      this.uiCamera.ignore(npcSprite);
+
+      this.explorationNPCs.push({
+        sprite: npcSprite,
+        id: npc.id,
+        name: npc.name,
+        gridX: npc.x,
+        gridY: npc.y,
+        portrait: npc.portrait ? `portrait_${npc.portrait}` : undefined,
+        dialogue: npc.dialogue,
+        isShrine: npc.isShrine,
+      });
+    }
+  }
+
+  /**
+   * Spawn party member heroes for exploration mode (excluding player's hero)
+   */
+  private spawnExplorationPartyMembers(): void {
+    // Don't double-spawn if already created
+    if (this.explorationPartyMembers.length > 0) return;
+
+    const heroPositions = this.battleConfig.heroPositions;
+    if (!heroPositions || heroPositions.length === 0) return;
+
+    // Get all hero IDs except the player's chosen hero
+    const allHeroes = ['arden', 'quin', 'veil', 'ty', 'thorn'];
+    const partyMembers = allHeroes.filter(h => h !== this.heroId);
+
+    // Hero display names
+    const heroNames: Record<string, string> = {
+      arden: 'Arden',
+      quin: 'Quin',
+      veil: 'Veil',
+      ty: 'Ty',
+      thorn: 'Thorn',
+    };
+
+    // Hero dialogues when talking to party members
+    const heroDialogues: Record<string, string[]> = {
+      arden: ["These people could use a proper drill sergeant. But what they really need is a leader!"],
+      quin: ["After assigning a multiplier to reflect the discrepancy in motivation of folks fighting for their homes vs random mercenaries...the odds are just in our favor."],
+      veil: ["These folk wound up tight. But that'll just make 'em hit harder when they swing.", "I'm looking forward to cracking those masks off the cultists."],
+      ty: ["Technically, Ledgermen are cops. And I'm always down to blast an authority figure!"],
+      thorn: ["The tree whose roots would smother its neighbor, leaves no option but be excised."],
+    };
+
+    partyMembers.forEach((heroId, index) => {
+      if (index >= heroPositions.length) return;
+
+      const pos = heroPositions[index];
+      const pixelX = pos.x * GAME_CONFIG.TILE_SIZE + GAME_CONFIG.TILE_SIZE / 2;
+      const pixelY = pos.y * GAME_CONFIG.TILE_SIZE + GAME_CONFIG.TILE_SIZE / 2;
+
+      // Use actual hero sprite
+      const spriteKey = `sprite_${heroId}_front`;
+      const heroSprite = this.add.sprite(pixelX, pixelY, spriteKey);
+      heroSprite.setOrigin(0.5, 0.5);
+      heroSprite.setScale(GAME_CONFIG.TILE_SIZE / GAME_CONFIG.SPRITE_SIZE);
+      heroSprite.setDepth(10);
+
+      // Make UI camera ignore this sprite
+      this.uiCamera.ignore(heroSprite);
+
+      // Add to NPCs list for interaction (heroes are talkable NPCs)
+      this.explorationNPCs.push({
+        sprite: heroSprite,
+        id: heroId,
+        name: heroNames[heroId] || heroId,
+        gridX: pos.x,
+        gridY: pos.y,
+        portrait: `portrait_${heroId}`,
+        dialogue: heroDialogues[heroId] || ["..."],
+      });
+
+      this.explorationPartyMembers.push({
+        sprite: heroSprite,
+        heroId,
+        name: heroNames[heroId] || heroId,
+        gridX: pos.x,
+        gridY: pos.y,
+      });
+    });
+  }
+
+  /**
+   * Get NPC in the direction player is facing (for interaction)
+   */
+  private getAdjacentNPC(): { sprite: Phaser.GameObjects.Sprite; id: string; name: string; gridX: number; gridY: number; portrait?: string; dialogue: string[]; isShrine?: boolean } | null {
+    if (!this.explorationLeader) return null;
+
+    // Calculate the tile the player is facing
+    let checkX = this.explorationLeader.gridX;
+    let checkY = this.explorationLeader.gridY;
+
+    switch (this.explorationLeader.facing) {
+      case 'north': checkY -= 1; break;
+      case 'south': checkY += 1; break;
+      case 'east': checkX += 1; break;
+      case 'west': checkX -= 1; break;
+    }
+
+    // Find NPC at the faced tile
+    for (const npc of this.explorationNPCs) {
+      if (npc.gridX === checkX && npc.gridY === checkY) {
+        return npc;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Handle NPC interaction (talk)
+   */
+  private handleNPCInteraction(): void {
+    if (this.npcDialogueActive) return;
+
+    const npc = this.getAdjacentNPC();
+    if (!npc) return;
+
+    this.npcDialogueActive = true;
+
+    // Special handling for Sister Elarra - show Elarra's services menu after dialogue
+    if (npc.id === 'sister_elarra') {
+      this.dialogueRenderer.startDialogue(
+        npc.dialogue,
+        npc.name,
+        () => {
+          this.npcDialogueActive = false;
+          this.pendingServicesDialogue = true;
+          this.scene.pause();
+          this.scene.launch('MenuScene', {
+            heroState: this.heroState,
+            returnScene: 'BattleScene',
+            initialView: 'hrothgar',
+            inventory: this.inventory,
+          });
+        },
+        npc.portrait && this.textures.exists(npc.portrait) ? npc.portrait : undefined
+      );
+      return;
+    }
+
+    // Show dialogue using the dialogue renderer
+    this.dialogueRenderer.startDialogue(
+      npc.dialogue,
+      npc.name,
+      () => {
+        this.npcDialogueActive = false;
+      },
+      npc.portrait && this.textures.exists(npc.portrait) ? npc.portrait : undefined
+    );
+  }
+
+  /**
+   * Show Sister Elarra's ending dialogue after returning from services menu
+   */
+  private showElarraEndingDialogue(): void {
+    this.npcDialogueActive = true;
+    this.dialogueRenderer.startDialogue(
+      ["May the Forge's fire guide your path. Return if you need my assistance."],
+      'Sister Elarra',
+      () => {
+        this.npcDialogueActive = false;
+      },
+      this.textures.exists('portrait_sister_elarra') ? 'portrait_sister_elarra' : undefined
+    );
+  }
+
+  /**
+   * Check if a grid position is blocked by an NPC
+   */
+  private isBlockedByNPC(gridX: number, gridY: number): boolean {
+    return this.explorationNPCs.some(npc => npc.gridX === gridX && npc.gridY === gridY);
   }
 
   /**
