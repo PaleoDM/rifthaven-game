@@ -155,7 +155,6 @@ export interface EnemyData {
   resilience: number;
   speed: number;
   abilities: string[];
-  xpReward: number;
   flying?: boolean; // Flying units ignore terrain restrictions
 }
 
@@ -231,14 +230,16 @@ export interface BattleConfig {
   heroFacing?: 'north' | 'south' | 'east' | 'west'; // Initial facing direction for heroes (default: 'south')
   enemyFacing?: 'north' | 'south' | 'east' | 'west'; // Initial facing direction for enemies (default: 'north')
   heroLevel?: number; // Override hero level for testing (default: use saved state or 1)
-  postVictoryMode?: 'return_to_town' | 'return_to_sparkworks' | 'explore' | 'to_be_continued'; // What happens after victory (default: return_to_town)
+  postVictoryMode?: 'return_to_town' | 'return_to_sparkworks' | 'explore' | 'transition' | 'to_be_continued'; // What happens after victory (default: return_to_town)
   exitTrigger?: {
     bounds: { x1: number; y1: number; x2: number; y2: number };
-    destination: string; // Where to go: 'travel', 'town', 'post_battle_town', or a specific scene name
+    destination: string; // Where to go: 'travel', 'town', 'post_battle_town', 'BattleScene:<map>', or a specific scene name
+    fallbackDestination?: string; // Where to go if the battle destination was already completed
   };
   returnPosition?: { x: number; y: number }; // Position on travel map when returning from battle
   playerStart?: { x: number; y: number }; // Player start position for exploration mode (if different from battle end position)
   healPartyOnVictory?: boolean; // Fully heal the party after victory (for story moments before shrines are available)
+  heroDialogues?: Record<string, string[]>; // Per-map hero dialogue overrides for exploration mode
 }
 
 // =============================================================================

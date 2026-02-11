@@ -555,5 +555,24 @@
       "resiliencePenalty": 2,
       "duration": "1d4"
     }
+  },
+  "cloudkill": {
+    "id": "cloudkill",
+    "name": "Cloudkill",
+    "description": "A billowing cloud of toxic vapor engulfs the area.",
+    "type": "spell",
+    "cost": 5,
+    "costType": "mana",
+    "range": 2,
+    "targetType": "area",
+    "areaSize": { "width": 2, "height": 2 },
+    "damage": "2d6",
+    "damageOnSave": "half",
+    "effect": {
+      "type": "poison",
+      "damagePerTurn": "1d4",
+      "durationOnFail": "1d4",
+      "durationOnSave": 2
+    }
   }
 }

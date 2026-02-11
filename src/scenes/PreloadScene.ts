@@ -65,7 +65,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('map_sparkworks', 'assets/maps/sparkworks.png');
     this.load.image('map_street', 'assets/maps/street.png');
     this.load.image('map_allfather_chapel', 'assets/maps/allfather_chapel.png');
-    // this.load.image('map_sparkworks_underground', 'assets/maps/sparkworks_underground.png'); // TODO: Add underground map
+    this.load.image('map_sparkworks_underground', 'assets/maps/sparkworks_underground.png');
 
     // Hero sprites (4 directions each)
     const heroes = ['arden', 'quin', 'veil', 'ty', 'thorn', 'freddie', 'leon'];
@@ -125,6 +125,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json('data_battle_sparkworks_street', 'data/battles/sparkworks_street.json');
     this.load.json('data_battle_allfather_chapel', 'data/battles/allfather_chapel.json');
     this.load.json('data_battle_ashen_chapel', 'data/battles/ashen_chapel.json');
+    this.load.json('data_battle_ashen_chapel_battle', 'data/battles/ashen_chapel_battle.json');
+    this.load.json('data_battle_ashen_chapel_2', 'data/battles/ashen_chapel_2.json');
 
     // Audio / Music
     this.load.audio('music_title', 'assets/audio/title_screen.mp3');
@@ -137,7 +139,8 @@ export class PreloadScene extends Phaser.Scene {
     const cultists = ['cultist_caster', 'cultist_enforcer', 'cultist_mook'];
     // Ledgermen faction
     const ledgermen = ['ledgerman_enforcer', 'ledgerman_mook', 'ledgerman_hexer'];
-    const enemies = [...cultists, ...ledgermen];
+    const bosses = ['mezzoloth'];
+    const enemies = [...cultists, ...ledgermen, ...bosses];
     const enemyDirections = ['front', 'back', 'left', 'right'];
 
     enemies.forEach((enemy) => {

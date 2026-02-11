@@ -34,6 +34,8 @@ export class NarratorScene extends Phaser.Scene {
     { name: 'Battle: Distillery', scene: 'BattleScene:abandoned_distillery', description: 'Lv1 - Opening battle' },
     { name: 'Battle: Street Ambush', scene: 'BattleScene:sparkworks_street', description: 'Lv1 - Ledgermen ambush' },
     { name: 'Explore: Ashen Chapel', scene: 'BattleScene:ashen_chapel', description: 'Lv2 - Chapel exploration' },
+    { name: 'Battle: Ashen Chapel', scene: 'BattleScene:ashen_chapel_battle', description: 'Lv2 - Mezzoloth boss fight' },
+    { name: 'Explore: Chapel (Post)', scene: 'BattleScene:ashen_chapel_2', description: 'Lv2 - Post-battle chapel' },
     { name: 'MenuScene', scene: 'MenuScene', description: 'Party stats overlay' },
   ];
   private devSceneTexts: Phaser.GameObjects.Text[] = [];

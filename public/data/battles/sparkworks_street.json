@@ -22,7 +22,10 @@
     { "type": "ledgerman_mook", "x": 6, "y": 4 },
     { "type": "ledgerman_mook", "x": 11, "y": 4 }
   ],
-  "chests": [],
+  "chests": [
+    { "id": "street_chest_1", "x": 1, "y": 6 },
+    { "id": "street_chest_2", "x": 13, "y": 9 }
+  ],
   "props": [],
   "terrain": [
     [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],

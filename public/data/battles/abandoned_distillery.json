@@ -21,7 +21,10 @@
     { "type": "cultist_caster", "x": 7, "y": 4 },
     { "type": "cultist_mook", "x": 4, "y": 9 }
   ],
-  "chests": [],
+  "chests": [
+    { "id": "distillery_chest_1", "x": 2, "y": 10 },
+    { "id": "distillery_chest_2", "x": 7, "y": 3 }
+  ],
   "props": [
     { "id": "dante_defeated", "sprite": "sprite_dante_left", "x": 8, "y": 8, "rotation": 90 }
   ],

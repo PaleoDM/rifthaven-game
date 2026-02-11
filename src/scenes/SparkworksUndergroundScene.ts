@@ -98,6 +98,9 @@ export class SparkworksUndergroundScene extends Phaser.Scene {
   // Level up overlay
   private levelUpOverlay: LevelUpOverlay | null = null;
 
+  // Congratulations message
+  private hasShownCongrats: boolean = false;
+
   private readonly GRID_SIZE = 24;
 
   // Calculate tile dimensions based on scaled map size
@@ -206,6 +209,13 @@ export class SparkworksUndergroundScene extends Phaser.Scene {
         this.showLevelUpScreen(data.levelUps!);
       });
     }
+
+    // Show congratulations message on first visit
+    if (!this.gameFlags['sparkworks_tutorial_complete']) {
+      this.time.delayedCall(500, () => {
+        this.showCongratulations();
+      });
+    }
   }
 
   private showLevelUpScreen(levelUps: BattleXPSummary[]): void {
@@ -219,6 +229,27 @@ export class SparkworksUndergroundScene extends Phaser.Scene {
       },
     });
     this.levelUpOverlay.show();
+  }
+
+  private showCongratulations(): void {
+    if (this.hasShownCongrats) return;
+    this.hasShownCongrats = true;
+    this.isInDialogue = true;
+
+    this.gameFlags['sparkworks_tutorial_complete'] = true;
+
+    this.dialogueRenderer.startDialogue(
+      [
+        'Congratulations on completing the Rifthaven Tutorial!',
+        'Thank you for playing!',
+        'The tunnels beneath Sparkworks stretch far and wide. Explore the underground to discover what lies ahead.',
+        'More content is coming soon. Stay tuned!'
+      ],
+      'THE END',
+      () => {
+        this.isInDialogue = false;
+      }
+    );
   }
 
   private drawGridOverlay(): void {
@@ -383,35 +414,33 @@ export class SparkworksUndergroundScene extends Phaser.Scene {
       ease: 'Linear',
       onComplete: () => {
         this.isMoving = false;
-        this.checkLocationProximity();
       },
     });
-  }
-
-  private checkLocationProximity(): void {
-    const location = this.getLocationAtPosition(this.playerGridX, this.playerGridY);
-
-    if (location && location.type !== 'blocked') {
-      this.promptLocationInteraction(location);
-    }
   }
 
   private promptLocationInteraction(location: LocationMarker): void {
     this.isInDialogue = true;
 
+    // Check if this location has an actual destination
+    const hasDestination = location.targetScene || location.battleMap || location.exploreMap;
+
     this.dialogueRenderer.startDialogue(
       location.description,
       location.name,
       () => {
-        this.travelToLocation(location);
+        if (hasDestination) {
+          this.travelToLocation(location);
+        } else {
+          this.isInDialogue = false;
+        }
       }
     );
   }
 
   private travelToLocation(location: LocationMarker): void {
-    if (location.type === 'surface') {
-      // Return to surface (Sparkworks)
-      this.scene.start('SparkworksScene', {
+    if (location.type === 'surface' && location.targetScene) {
+      // Use the configured target scene
+      const sceneData = {
         heroId: this.heroId,
         heroState: this.heroState,
         gameFlags: this.gameFlags,
@@ -420,7 +449,17 @@ export class SparkworksUndergroundScene extends Phaser.Scene {
         chests: this.chestStates,
         devMode: this.devMode,
         playerPosition: this.returnPosition,
-      });
+      };
+
+      if (location.targetScene.startsWith('BattleScene:')) {
+        const battleMap = location.targetScene.split(':')[1];
+        this.scene.start('BattleScene', {
+          ...sceneData,
+          battleMap,
+        });
+      } else {
+        this.scene.start(location.targetScene, sceneData);
+      }
     } else if (location.type === 'battle' && location.battleMap) {
       this.scene.start('BattleScene', {
         battleMap: location.battleMap,

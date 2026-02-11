@@ -2967,6 +2967,11 @@ export class BattleScene extends Phaser.Scene {
       this.time.delayedCall(300, () => {
         this.playQuetziRescueAnimation();
       });
+    } else if (this.battleConfig.postVictoryMode === 'transition') {
+      // Skip exploration and go directly to exit trigger destination
+      this.time.delayedCall(300, () => {
+        this.exitExploration();
+      });
     } else if (this.battleConfig.postVictoryMode === 'explore') {
       // Enter exploration mode
       this.time.delayedCall(300, () => {
@@ -3754,8 +3759,39 @@ export class BattleScene extends Phaser.Scene {
         chests: this.chestStates,
         devMode: this.devMode,
       });
+    } else if (destination.startsWith('BattleScene:')) {
+      // Launch a battle from exploration (e.g., "BattleScene:ashen_chapel_battle")
+      const battleMap = destination.split(':')[1];
+      // Only trigger if battle hasn't been completed yet; otherwise go to fallback
+      if (!this.gameFlags[`${battleMap}_battle_complete`]) {
+        this.scene.start('BattleScene', {
+          battleMap: battleMap,
+          heroId: this.heroId,
+          heroState: updatedHeroState,
+          gameFlags: this.gameFlags,
+          playTime: this.playTime,
+          inventory: this.inventory,
+          chests: this.chestStates,
+          devMode: this.devMode,
+        });
+      } else {
+        // Battle already done — fall through to the returnPosition scene
+        const fallback = this.battleConfig.exitTrigger?.fallbackDestination || 'SparkworksScene';
+        this.scene.start(fallback, {
+          heroId: this.heroId,
+          heroState: updatedHeroState,
+          gameFlags: this.gameFlags,
+          playTime: this.playTime,
+          levelUps: levelUps.length > 0 ? levelUps : undefined,
+          inventory: this.inventory,
+          chests: this.chestStates,
+          devMode: this.devMode,
+          playerPosition: this.battleConfig.returnPosition,
+        });
+      }
     } else {
       // Generic scene destination - use the destination as scene name directly
+      // Don't pass returnPosition as playerPosition — let the destination scene use its own playerStart
       this.scene.start(destination, {
         heroId: this.heroId,
         heroState: updatedHeroState,
@@ -3765,7 +3801,6 @@ export class BattleScene extends Phaser.Scene {
         inventory: this.inventory,
         chests: this.chestStates,
         devMode: this.devMode,
-        playerPosition: this.battleConfig.returnPosition,
       });
     }
   }
@@ -7007,14 +7042,17 @@ export class BattleScene extends Phaser.Scene {
       thorn: 'Thorn',
     };
 
-    // Hero dialogues when talking to party members
-    const heroDialogues: Record<string, string[]> = {
+    // Hero dialogues when talking to party members (use config overrides if available)
+    const defaultHeroDialogues: Record<string, string[]> = {
       arden: ["These people could use a proper drill sergeant. But what they really need is a leader!"],
       quin: ["After assigning a multiplier to reflect the discrepancy in motivation of folks fighting for their homes vs random mercenaries...the odds are just in our favor."],
       veil: ["These folk wound up tight. But that'll just make 'em hit harder when they swing.", "I'm looking forward to cracking those masks off the cultists."],
       ty: ["Technically, Ledgermen are cops. And I'm always down to blast an authority figure!"],
       thorn: ["The tree whose roots would smother its neighbor, leaves no option but be excised."],
     };
+    const heroDialogues = this.battleConfig.heroDialogues
+      ? { ...defaultHeroDialogues, ...this.battleConfig.heroDialogues }
+      : defaultHeroDialogues;
 
     partyMembers.forEach((heroId, index) => {
       if (index >= heroPositions.length) return;

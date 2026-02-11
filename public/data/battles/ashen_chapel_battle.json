@@ -1,0 +1,65 @@
+{
+  "id": "ashen_chapel_battle",
+  "displayName": "Assault on the Ashen Chapel",
+  "mapImage": "map_allfather_chapel",
+  "gridWidth": 24,
+  "gridHeight": 16,
+  "heroLevel": 2,
+  "heroStartPositions": [
+    { "x": 10, "y": 4 },
+    { "x": 11, "y": 4 },
+    { "x": 12, "y": 4 },
+    { "x": 13, "y": 4 },
+    { "x": 11, "y": 5 }
+  ],
+  "enemies": [
+    { "type": "mezzoloth", "x": 11, "y": 12 },
+    { "type": "cultist_enforcer", "x": 8, "y": 12 },
+    { "type": "cultist_enforcer", "x": 15, "y": 12 },
+    { "type": "cultist_mook", "x": 5, "y": 13 },
+    { "type": "cultist_mook", "x": 18, "y": 13 },
+    { "type": "cultist_mook", "x": 12, "y": 13 },
+    { "type": "cultist_caster", "x": 11, "y": 14 }
+  ],
+  "chests": [],
+  "props": [],
+  "terrain": [
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,2,2,0,0,0,2,2,1,1,1,1,1,1,1,1,2,2,0,0,1,2,2,2],
+    [2,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,2],
+    [2,1,0,0,0,1,1,0,0,0,1,1,1,1,0,0,0,1,0,0,0,0,1,2],
+    [2,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,2],
+    [2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+    [2,1,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0],
+    [2,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0],
+    [2,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0],
+    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+    [2,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,2],
+    [2,1,0,0,0,1,1,2,2,2,0,0,0,0,2,2,2,1,1,0,1,0,1,2],
+    [2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],
+    [2,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,2],
+    [2,1,1,1,0,0,2,2,0,0,0,0,0,0,0,0,2,2,0,0,1,1,1,2],
+    [2,2,2,2,2,2,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,2,2]
+  ],
+  "introCutscene": [
+    { "speaker": "Narrator", "text": "The chapel doors burst open as cultists pour in from every entrance!" },
+    { "speaker": "Narrator", "text": "At their head, a towering insectoid fiend — a Mezzoloth, summoned from the evil plane Gehenna." },
+    { "speaker": "Arden", "text": "A trident? Well at least they've got good taste...", "portrait": "portrait_arden" },
+    { "speaker": "Ty", "text": "These guys look real tough. I don't suppose they just wanna talk?", "portrait": "portrait_ty" },
+    { "speaker": "Thorn", "text": "The locust that devours the field does not negotiate with the wheat. Steel yourselves.", "portrait": "portrait_thorn" }
+  ],
+  "victoryCutscene": [
+    { "speaker": "Narrator", "text": "The Mezzoloth crumbles, its form dissolving into acrid smoke." },
+    { "speaker": "Narrator", "text": "Around you, the people of Sparkworks repel other cultists. The day is won!" },
+    { "speaker": "Veil", "text": "They summoned a fiend...The Hushed Choir is more dangerous than we thought.", "portrait": "portrait_veil" },
+    { "speaker": "Quin", "text": "If they can summon one, they can summon more. We need to find who's pulling the strings.", "portrait": "portrait_quin" }
+  ],
+  "postVictoryMode": "transition",
+  "playerStart": { "x": 12, "y": 14 },
+  "exitTrigger": {
+    "bounds": { "x1": 10, "y1": 14, "x2": 13, "y2": 15 },
+    "destination": "BattleScene:ashen_chapel_2"
+  },
+  "returnPosition": { "x": 14, "y": 6 },
+  "healPartyOnVictory": true
+}

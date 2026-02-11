@@ -12,8 +12,7 @@
     "magic": 10,
     "resilience": 1,
     "speed": 1,
-    "abilities": ["crossbow", "poison_dagger"],
-    "xpReward": 15
+    "abilities": ["crossbow", "poison_dagger"]
   },
   "cultist_enforcer": {
     "id": "cultist_enforcer",
@@ -26,8 +25,7 @@
     "magic": 10,
     "resilience": 1,
     "speed": 1,
-    "abilities": ["club_smash"],
-    "xpReward": 0
+    "abilities": ["club_smash"]
   },
   "cultist_caster": {
     "id": "cultist_caster",
@@ -42,8 +40,7 @@
     "magic": 12,
     "resilience": 2,
     "speed": 1,
-    "abilities": ["arcane_bolt", "hex_bomb"],
-    "xpReward": 25
+    "abilities": ["arcane_bolt", "hex_bomb"]
   },
   "ledgerman_mook": {
     "id": "ledgerman_mook",
@@ -56,8 +53,7 @@
     "magic": 8,
     "resilience": 1,
     "speed": 1,
-    "abilities": ["blackjack", "throwing_knife"],
-    "xpReward": 12
+    "abilities": ["blackjack", "throwing_knife"]
   },
   "ledgerman_enforcer": {
     "id": "ledgerman_enforcer",
@@ -70,8 +66,7 @@
     "magic": 8,
     "resilience": 1,
     "speed": 0,
-    "abilities": ["club_smash"],
-    "xpReward": 0
+    "abilities": ["club_smash"]
   },
   "ledgerman_hexer": {
     "id": "ledgerman_hexer",
@@ -86,7 +81,21 @@
     "magic": 12,
     "resilience": 2,
     "speed": 2,
-    "abilities": ["arcane_bolt", "hex_bomb", "curse_of_debt"],
-    "xpReward": 18
+    "abilities": ["arcane_bolt", "hex_bomb", "curse_of_debt"]
+  },
+  "mezzoloth": {
+    "id": "mezzoloth",
+    "name": "Mezzoloth",
+    "sprite": "sprite_mezzoloth",
+    "hp": 28,
+    "maxHp": 28,
+    "mana": 10,
+    "maxMana": 10,
+    "attack": 6,
+    "defense": 15,
+    "magic": 12,
+    "resilience": 3,
+    "speed": 2,
+    "abilities": ["trident", "poison_spit", "cloudkill"]
   }
 }

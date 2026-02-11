@@ -28,6 +28,7 @@ export class TerrainEditorScene extends Phaser.Scene {
     { id: 'street', name: 'Sparkworks Streets', file: 'map_street', isBattle: true },
     { id: 'allfather_chapel', name: 'All Father Chapel', file: 'map_allfather_chapel', isBattle: true },
     { id: 'sparkworks', name: 'Sparkworks Overland', file: 'map_sparkworks', scale: 0.75 },
+    { id: 'sparkworks_underground', name: 'Sparkworks Underground', file: 'map_sparkworks_underground', scale: 0.75 },
   ];
 
   private enemyTypes: string[] = ['cultist_mook', 'cultist_enforcer', 'cultist_caster', 'ledgerman_mook', 'ledgerman_enforcer', 'ledgerman_hexer'];
@@ -65,6 +66,7 @@ export class TerrainEditorScene extends Phaser.Scene {
     this.load.image('map_street', 'assets/maps/street.png');
     this.load.image('map_allfather_chapel', 'assets/maps/allfather_chapel.png');
     this.load.image('map_sparkworks', 'assets/maps/sparkworks.png');
+    this.load.image('map_sparkworks_underground', 'assets/maps/sparkworks_underground.png');
   }
 
   create(): void {

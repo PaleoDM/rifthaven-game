@@ -1,0 +1,206 @@
+{
+  "id": "ashen_chapel_2",
+  "displayName": "Ashen Chapel",
+  "mapImage": "map_allfather_chapel",
+  "gridWidth": 24,
+  "gridHeight": 16,
+  "heroLevel": 2,
+  "heroStartPositions": [
+    { "x": 3, "y": 12 },
+    { "x": 4, "y": 12 },
+    { "x": 5, "y": 12 },
+    { "x": 3, "y": 13 },
+    { "x": 4, "y": 13 }
+  ],
+  "enemies": [],
+  "chests": [
+    { "id": "chapel_chest_1", "x": 6, "y": 8, "facing": "south" },
+    { "id": "chapel_chest_2", "x": 17, "y": 8, "facing": "south" }
+  ],
+  "props": [],
+  "heroPositions": [
+    { "x": 8, "y": 7 },
+    { "x": 9, "y": 7 },
+    { "x": 14, "y": 7 },
+    { "x": 15, "y": 7 }
+  ],
+  "npcs": [
+    {
+      "id": "sister_elarra",
+      "name": "Sister Elarra",
+      "sprite": "sister_elarra",
+      "x": 11,
+      "y": 3,
+      "portrait": "sister_elarra",
+      "dialogue": [
+        "You fought brilliantly. The Allfather's forge burns brighter for your courage.",
+        "We lost some good people in the attack, but the chapel still stands. That's what matters.",
+        "The shrine is yours to use, as always. And if you need equipment tended to, I'm here.",
+        "Go carefully. The Hushed Choir will not forgive what happened here today."
+      ]
+    },
+    {
+      "id": "dante",
+      "name": "Dante",
+      "sprite": "dante",
+      "x": 11,
+      "y": 13,
+      "portrait": "dante",
+      "facing": "north",
+      "dialogue": [
+        "The streets are crawling with Ledgermen and cultists. We can't go out the front door anymore.",
+        "But I told you I had a lead on some old smuggling tunnels, didn't I? Turns out they run right under the chapel.",
+        "There's a passage through the east wall here that connects to the tunnel network. We can use it to move unseen."
+      ]
+    },
+    {
+      "id": "villager_1",
+      "name": "Old Brewer",
+      "sprite": "villager_male",
+      "x": 3,
+      "y": 1,
+      "dialogue": [
+        "A damned fiend! In our chapel! If the Allfather weren't watching over us, we'd all be dead.",
+        "But we held. We actually held. Haven't felt this alive in years."
+      ]
+    },
+    {
+      "id": "child_1",
+      "name": "Zeke",
+      "sprite": "child_male",
+      "x": 4,
+      "y": 2,
+      "dialogue": [
+        "That bug monster was SO scary! But you smashed it! I saw the whole thing from behind the pews!",
+        "Everyone's saying you're the real deal now. Not just talk."
+      ]
+    },
+    {
+      "id": "guard_1",
+      "name": "Chapel Guard",
+      "sprite": "guard",
+      "x": 3,
+      "y": 3,
+      "dialogue": [
+        "I won't lie — when that thing came through the door, I nearly dropped my spear.",
+        "But then I saw you lot charge right at it. Figured if you could face it, so could I."
+      ]
+    },
+    {
+      "id": "child_2",
+      "name": "Child",
+      "sprite": "child_female",
+      "x": 4,
+      "y": 4,
+      "dialogue": [
+        "The big bug is gone, right? It's not coming back?",
+        "Zeke says you punched it in the face. Is that true?"
+      ]
+    },
+    {
+      "id": "villager_2",
+      "name": "Refugee Woman",
+      "sprite": "villager_female",
+      "x": 18,
+      "y": 1,
+      "dialogue": [
+        "They attacked our sanctuary. Our chapel. There's no pretending this is just politics anymore.",
+        "Whatever you need from us, you have it. We're in this together now."
+      ]
+    },
+    {
+      "id": "child_3",
+      "name": "Child",
+      "sprite": "child_female",
+      "x": 19,
+      "y": 2,
+      "dialogue": [
+        "Papa came back from the House of Respite! He says the Stoutwaters are with us!",
+        "He also says we have to stay inside for a while. But that's okay."
+      ]
+    },
+    {
+      "id": "guard_2",
+      "name": "Young Guard",
+      "sprite": "guard",
+      "x": 19,
+      "y": 3,
+      "dialogue": [
+        "They came in through every entrance. We weren't ready. Next time, we will be.",
+        "I'm doubling the watch. No one gets through those doors without us knowing."
+      ]
+    },
+    {
+      "id": "villager_3",
+      "name": "Grateful Refugee",
+      "sprite": "villager_male",
+      "x": 18,
+      "y": 4,
+      "dialogue": [
+        "I heard Dante's found a way through the tunnels. Smart man. The streets aren't safe for anyone right now.",
+        "The Ledgermen have checkpoints on every corner. And those cultists... they're looking for us."
+      ]
+    },
+    {
+      "id": "moradin_shrine",
+      "name": "Shrine of Moradin",
+      "sprite": "moradin_shrine",
+      "x": 12,
+      "y": 3,
+      "isShrine": true,
+      "dialogue": []
+    }
+  ],
+  "terrain": [
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,2,2,0,0,0,2,2,1,1,1,1,1,1,1,1,2,2,0,0,1,2,2,2],
+    [2,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,2],
+    [2,1,0,0,0,1,1,0,0,0,1,1,1,1,0,0,0,1,0,0,0,0,1,2],
+    [2,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,2],
+    [2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2],
+    [2,1,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,0,0],
+    [2,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0],
+    [2,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0],
+    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+    [2,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,2],
+    [2,1,0,0,0,1,1,2,2,2,0,0,0,0,2,2,2,1,1,0,1,0,1,2],
+    [2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],
+    [2,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,2],
+    [2,1,1,1,0,0,2,2,0,0,0,0,0,0,0,0,2,2,0,0,1,1,1,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+  ],
+  "introCutscene": [
+    { "speaker": "Narrator", "text": "The chapel is quiet now. The acrid smell of the Mezzoloth's remains still lingers in the air." },
+    { "speaker": "Narrator", "text": "The people of Sparkworks tend to the wounded and shore up the defenses." }
+  ],
+  "heroDialogues": {
+    "arden": [
+      "I know I know. I really should wear a helmet. It's important to protect the money maker.",
+      "But the people sure seem to find their courage when I flash them a smile!"
+    ],
+    "ty": [
+      "I can't believe we actually did that. A real fiend. We fought a real fiend and we're still standing.",
+      "These people are looking at us like we're... heroes or something. That's new."
+    ],
+    "thorn": [
+      "The storm has passed. But the sky remains dark. We should speak with the people here — they will need reassurance.",
+      "The roots of this chapel run deep. We will learn much by nourishing them."
+    ],
+    "veil": [
+      "The people here fought alongside us. That takes courage. We shouldn't waste it.",
+      "We should talk to Sister Elarra. If the Choir targeted this place specifically, there's a reason."
+    ],
+    "quin": [
+      "Dante said something about tunnels. We should find him — we'll need a way to move without being seen.",
+      "The Ledgermen will hear about this. We need to be gone before they come knocking."
+    ]
+  },
+  "victoryCutscene": [],
+  "postVictoryMode": "explore",
+  "playerStart": { "x": 12, "y": 9 },
+  "exitTrigger": {
+    "bounds": { "x1": 23, "y1": 7, "x2": 23, "y2": 8 },
+    "destination": "SparkworksUndergroundScene"
+  },
+  "returnPosition": { "x": 14, "y": 6 }
+}
