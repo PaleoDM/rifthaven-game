@@ -249,6 +249,7 @@ export class BattleScene extends Phaser.Scene {
     this.inventoryManager = new InventoryManager(this.inventory, this.heroState);
     this.lootManager = new LootManager(this.chestStates, this.inventoryManager);
     this.explorationChests = [];
+    this.explorationNPCs = [];
 
     // Reset state
     this.selectedUnit = null;
